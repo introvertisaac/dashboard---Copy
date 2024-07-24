@@ -9,9 +9,9 @@
 
     <div class="verification-options w-100">
         @foreach ($methods as $key => $method)
-            <button wire:click="init_check('{{$key}}')" {{--data-bs-toggle="offcanvas"--}} data-bs-toggle="modal"
+            <button wire:click="init_check('{{$key}}')" {{--data-bs-toggle="modal"
                     data-bs-target="#canvas_{{$key}}"
-                    aria-controls="canvas_{{$key}}"
+                    aria-controls="canvas_{{$key}}"--}}
                     class="verification-method">
                 <svg width="46" height="46" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect width="46" height="46" rx="23" fill="#FFFBF8"/>
@@ -25,16 +25,6 @@
                 {{$method['label']}}
             </button>
 
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    var modalElement = document.getElementById('canvas_{{$key}}');
-
-                    modalElement.addEventListener('shown.bs.modal', function (e) {
-                        console.log('Modal is shown');
-
-                    });
-                });
-            </script>
 
 
             <div class="modal fade" tabindex="-1" id="canvas_{{$key}}">
@@ -223,13 +213,23 @@
     </div>
 
     <script>
+        window.addEventListener('openCheckInputModal', event => {
+            close_all_modals();
+            let check_type = event.detail.check;
+
+            let modal = new bootstrap.Modal(document.getElementById('canvas_'+check_type));
+            modal.show();
+        })
+
+
+
         window.addEventListener('openResultModal', event => {
-            //close_all_modals();
+            close_all_modals();
 
             var modal = new bootstrap.Modal(document.getElementById('result_check'));
             modal.show();
         })
-/*
+
         function close_all_modals() {
 
             var openModals = document.querySelectorAll(".modal");
@@ -244,7 +244,7 @@
                     }
                 }
             }
-        }*/
+        }
     </script>
 
 </div>

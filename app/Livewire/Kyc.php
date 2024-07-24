@@ -29,11 +29,11 @@ class Kyc extends Component
 
     public function init_check($check)
     {
-        //$this->reset();
+        $this->reset();
         $this->check_type = $check;
 
         $this->check_type_label = Arr::get($this->methods, $check . '.label');
-
+        $this->dispatch('openCheckInputModal',check: $check);
 
     }
 
