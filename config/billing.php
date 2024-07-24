@@ -11,7 +11,7 @@ return [
     'bank_check' => env('BANK_CHECK_COST', 1),
 
 
-    'free_wallet_amount' => env('TEST_CUSTOMER_AMOUNT', 1000),
+    'free_wallet_amount' => env('TEST_CUSTOMER_AMOUNT', 3000),
 
     'id_check_wholesale' => env('ID_CHECK_WHOLESALE', 4),
     'brs_check_wholesale' => env('BRS_CHECK_WHOLESALE', 400),

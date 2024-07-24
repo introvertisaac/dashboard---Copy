@@ -31,6 +31,8 @@ class CustomerObserver
         ]);
 
 
+        $wallet->deposit(config('billing.free_wallet_amount'));
+
     }
 
     /**
