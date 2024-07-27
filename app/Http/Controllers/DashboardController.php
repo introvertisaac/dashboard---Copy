@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Customer;
 use App\Models\Search;
+use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -32,9 +34,29 @@ class DashboardController extends Controller
             ->groupBy('search_type')
             ->get();
 
-       // dd($api_group_counts);
+        $search_chart = Search::where('customer_id', $customer->id)->select([
+            DB::raw('DATE(created_at) AS date'),
+            DB::raw('COUNT(id) AS count'),
+        ])
+            ->whereBetween('created_at', [Carbon::now()->subDays(14), Carbon::now()])
+            ->groupBy('date')
+            ->orderBy('date', 'ASC')
+            ->get()
+            ->toArray();
 
-        return view('dashboard', compact('api_group_counts','customer','service_count', 'customer_users_count', 'customer_uuid', 'activities', 'balance', 'searches_count', 'searches_count_today', 'searches_count_month', 'searches_count_year'));
+
+        $keys = [];
+        $values = [];
+        foreach ($search_chart as $key => $item) {
+            $keys[] = CarbonImmutable::parse($item['date'])->format('M d');
+            $values[] = $item['count'];
+        }
+
+        $chart_keys = implode(',', array_map('add_quotes', $keys));
+
+        $chart_values = implode(',', $values);
+
+        return view('dashboard', compact('chart_values','chart_keys','api_group_counts','customer','service_count', 'customer_users_count', 'customer_uuid', 'activities', 'balance', 'searches_count', 'searches_count_today', 'searches_count_month', 'searches_count_year'));
     }
 
 }
