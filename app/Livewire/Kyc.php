@@ -2,6 +2,8 @@
 
 namespace App\Livewire;
 
+use App\Models\Customer;
+use App\Models\Search;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -16,24 +18,21 @@ class Kyc extends Component
     public $check_result;
     public $balance_impact;
 
+    public $bank;
 
-    public $methods = [
-        'national_id' => ['input_label' => 'National ID Number', 'label' => 'National ID'],
-        'alien_id' => ['input_label' => 'Alien ID Number', 'label' => 'Alien ID'],
-        'plate' => ['input_label' => 'Vehicle Number Plate', 'label' => 'Vehicle Number Plate'],
-        'dl' => ['input_label' => 'Driving License', 'label' => 'Driving License'],
-        'kra' => ['input_label' => 'KRA Pin', 'label' => 'KRA Pin'],
-        'brs' => ['input_label' => 'Company Registration', 'label' => 'BRS Verification'],
-        //'bank' => ['input_label' => 'Bank Account Number', 'label' => 'Bank Account Number']
-    ];
+
+    public $methods = [];
+
+    protected $paginationTheme = 'bootstrap';
+    public $search = '';
 
     public function init_check($check)
     {
         $this->reset();
         $this->check_type = $check;
 
-        $this->check_type_label = Arr::get($this->methods, $check . '.label');
-        $this->dispatch('openCheckInputModal',check: $check);
+        $this->check_type_label = Arr::get(config('billing.services'), $check . '.label');
+        $this->dispatch('openCheckInputModal', check: $check);
 
     }
 
@@ -42,14 +41,31 @@ class Kyc extends Component
     {
         $this->openModal();
 
-        $response = check_call($this->check_type, $this->check_number);
+        $query_value = $this->bank ? $this->bank . '-' . $this->check_number : $this->check_number;
 
-        $this->balance_impact = ['Balance Before' => 200, 'Balance After' => 150];
+        $transaction = Search::newSearch(user(), $this->check_type, $query_value, null, 'portal');
 
-        $this->check_result = ($response);
+        if ($transaction) {
 
+            $call_response = check_call($this->check_type, $query_value);
 
-        Log::info($this->check_type, ['query' => $this->check_number, 'response' => $this->check_result]);
+            if (is_array($call_response)) {
+
+                $transaction->update([
+                    'response' => $call_response
+                ]);
+
+                $this->balance_impact = ['Balance Before' => optional($transaction)->balance_before, 'Balance After' => optional($transaction)->balance_after];
+
+                $this->check_result = ($call_response);
+            }
+            #Log::info($this->check_type, ['query' => $this->check_number, 'response' => $this->check_result]);
+        } else {
+
+            $this->check_result = [
+                'Unable to perform search' => ['Reason' => 'Low credit']
+            ];
+        }
 
 
     }
@@ -68,6 +84,18 @@ class Kyc extends Component
 
     public function render()
     {
-        return view('livewire.kyc');
+        $this->methods = \customer()->allowed_services;
+
+        if (strlen($this->search)) {
+            $listing = Search::currentCustomer()->latest()->where('search_param', 'like', '%' . $this->search . '%')
+                ->take(10)
+                ->paginate(10);
+        } else {
+
+            $listing = Search::currentCustomer()->latest()->paginate(5);
+        }
+
+
+        return view('livewire.kyc', compact('listing'));
     }
 }

@@ -1,11 +1,11 @@
 @extends('layout')
-@section('title','Government Checks')
+@section('title','Verifications')
 
 @section('content')
 
     <div class="flex items-center flex-wrap justify-between gap20 mb-5">
         <div class="mb-20">
-            <h4>Government Checks</h4>
+            <h4>Verifications</h4>
             <p>You can easily verify identification documents here</p>
         </div>
     </div>

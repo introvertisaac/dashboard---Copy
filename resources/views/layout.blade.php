@@ -120,7 +120,7 @@
                                                 </span>
                                                 <span class="flex flex-column">
                                                     <span class="body-title mb-2">{{user('name')}}</span>
-                                                    <span class="text-tiny">Admin  <i
+                                                    <span class="text-tiny">{{customer()->name}}  <i
                                                                 class="icon icon-chevron-down"></i></span>
                                                 </span>
                                             </span>
@@ -189,6 +189,7 @@
 <script src="{{ asset('js/main.js') }}"></script>
 
 @yield('scripts')
+@stack('child-scripts')
 
 </body>
 

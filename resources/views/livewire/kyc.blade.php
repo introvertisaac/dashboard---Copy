@@ -12,7 +12,7 @@
             <button wire:click="init_check('{{$key}}')" {{--data-bs-toggle="modal"
                     data-bs-target="#canvas_{{$key}}"
                     aria-controls="canvas_{{$key}}"--}}
-                    class="verification-method">
+            class="verification-method">
                 <svg width="46" height="46" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect width="46" height="46" rx="23" fill="#FFFBF8"/>
                     <path
@@ -39,7 +39,35 @@
                         </div>
                         <div class="modal-body">
 
+
                             <form wire:submit.prevent="kyc_check">
+
+
+                                @if ($key=='bank')
+
+                                    <div class="form-group">
+                                        <label class="body-title mb-3 "
+                                               for="bank_{{$key}}">Bank</label>
+                                        <select wire:key="bank_{{$key}}" required wire:model="bank"
+                                                id="in_{{$key}}">
+                                            <option value="">---Select Bank---</option>
+
+                                            @php
+                                                $banks = config('billing.banks');
+                                                asort($banks);
+                                            @endphp
+
+                                            @foreach($banks as $bank_id => $bank_name)
+
+                                                <option value="{{$bank_id}}">{{$bank_name}}</option>
+
+                                            @endforeach
+
+                                        </select>
+                                        @error('bank') <span class="error text-danger">{{ $message }}</span> @enderror
+                                    </div>
+                                    <br>
+                                @endif
 
                                 <div class="form-group">
                                     <label class="body-title mb-3"
@@ -50,6 +78,7 @@
                                     @error('name') <span class="error text-danger">{{ $message }}</span> @enderror
                                 </div>
 
+
                                 <div class="flex gap10 my-4">
                                     <input checked required class="" type="checkbox" id="c{{$key}}">
                                     <label class="body-text" for="c{{$key}}">By checking this box, you are agreeing to
@@ -59,7 +88,23 @@
 
                                 <div class="d-flex justify-center">
 
-                                    <button type="submit" class="button fw-light">Verify Identity</button>
+                                    <button wire:loading.attr="disabled" type="submit" class="button fw-light">
+                                        Verify Identity
+                                        <span wire:loading>...<svg width="24" height="24" viewBox="0 0 100 100"
+                                                                   xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                   stroke="#fff" stroke-width="2"
+                                                                   style="display: inline-block; vertical-align: middle; margin-left: 10px;">
+                                            <circle cx="50" cy="50" r="48" style="opacity:0.2;"/>
+                                            <circle cx="50" cy="50" r="48"
+                                                    style="stroke-dasharray:300; stroke-dashoffset:300;">
+                                                <animateTransform attributeName="transform" type="rotate" from="0 50 50"
+                                                                  to="360 50 50" dur="2s" repeatCount="indefinite"/>
+                                                <animate attributeName="stroke-dashoffset" from="300" to="0" dur="1s"
+                                                         repeatCount="indefinite"/>
+                                            </circle>
+                                        </svg></span>
+                                    </button>
+
 
                                 </div>
 
@@ -212,15 +257,87 @@
         </div>
     </div>
 
+
+
+    <div class="flex items-center flex-wrap justify-between mb-5 mt-5">
+        <div class="mb-20">
+            <h4>Results</h4>
+            <p>A list of all results searched before</p>
+        </div>
+    </div>
+
+        {{--<div class="flex items-center justify-between gap10 flex-wrap mb-20">
+            <div class="wg-filter flex-grow">
+                <form class="form-search bg-white">
+                    <fieldset class="name">
+                        <input spellcheck="false" type="text" wire:model.live="search" id="search"
+                               placeholder="Search" class="bg-white"
+                               name="name" tabindex="2" value="" aria-required="true" required="">
+                    </fieldset>
+                    <div class="button-submit">
+                        <button class="" type="submit"><i class="icon-search"></i></button>
+                    </div>
+                </form>
+            </div>
+        </div>--}}
+
+
+        @if(count($listing))
+        <div class="wg-box">
+        <div class="table-wrapper">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>KYC Type</th>
+                    <th>Search</th>
+                    <th>Channel</th>
+                    <th>Tracking ID</th>
+                    <th>Timestamp</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                @foreach($listing as $list_item)
+                    <tr>
+                        <td>{{strtoupper($list_item->search_type)}}</td>
+                        <td>{{$list_item->search_param}}</td>
+                        <td>{{ucwords($list_item->channel)}}
+                            <small class="d-block">{{$list_item->user->name}}</small>
+                        </td>
+                        <td>{{$list_item->created_at_human}}</td>
+                        <td>{{$list_item->search_uuid}}</td>
+
+                    </tr>
+                @endforeach
+
+
+                </tbody>
+            </table>
+
+            {{ $listing->links('vendor.pagination.bootstrap-5') }}
+        </div>
+
+
+
+
+    </div>
+
+        @else
+
+            <div class="alert alert-info"><h6> No records found</h6> </div>
+
+        @endif
+
+
+
     <script>
         window.addEventListener('openCheckInputModal', event => {
             close_all_modals();
             let check_type = event.detail.check;
 
-            let modal = new bootstrap.Modal(document.getElementById('canvas_'+check_type));
+            let modal = new bootstrap.Modal(document.getElementById('canvas_' + check_type));
             modal.show();
         })
-
 
 
         window.addEventListener('openResultModal', event => {

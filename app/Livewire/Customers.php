@@ -23,6 +23,9 @@ class Customers extends Component
     public $phone;
     public $charges = [];
     public $is_reseller;
+
+    public $amount;
+    public $narration;
     protected $paginationTheme = 'bootstrap';
     /**
      * @var true
@@ -78,13 +81,45 @@ class Customers extends Component
 
     }
 
+    public function allocate($uuid)
+    {
+        try {
+            $customer = Customer::findByUuid($uuid);
+            if (!$customer) {
+                session()->flash('error', 'Customer not found');
+            } else {
+
+                $this->customer_uuid = $uuid;
+                $this->customer = $customer;
+                $this->page_view = 'allocate-credit';
+            }
+        } catch (\Exception $ex) {
+            session()->flash('error', 'Something went wrong ');
+        }
+
+
+    }
+
+    public function credit_topup()
+    {
+        $customer = Customer::findByUuid($this->customer_uuid);
+        $amount = $this->amount;
+        $narration = $this->narration;
+        $customer_name = $customer->name;
+
+        $customer->wallet->deposit($amount, ['narration' => $narration, 'ip' => ip(), 'user_id' => user('id'), 'customer_id' => $this->customer->id]);
+
+        trail('customer-created', "Credit topup of $amount for " . $customer_name, $customer);
+
+        session()->flash('message', "Credit allocated successfully to $customer_name New balance: " . $customer->balance_label);
+
+        $this->list();
+    }
+
 
     public function new_customer()
     {
         $this->validate();
-
-        // Log::info('customer', ['this' => $this]);
-        Log::info('new', ['charges' => $this->charges]);
 
         $customer = Customer::create([
             'name' => $this->name,
@@ -111,7 +146,6 @@ class Customers extends Component
 
         $customer = Customer::findByUuid($this->customer_uuid);
 
-        Log::info('update', ['charges' => $this->charges]);
 
         $customer->update([
             'name' => $this->name,

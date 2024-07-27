@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use App\Traits\CustomerScopeTrait;
+use App\Traits\ModelTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class Search extends Model
 {
-    use HasFactory, CustomerScopeTrait;
+    use HasFactory, CustomerScopeTrait, ModelTrait;
 
     protected $table = 'searches';
     protected $guarded = [];
@@ -71,7 +72,7 @@ class Search extends Model
         return json_decode($value);
     }
 
-    public static function newSearch($user, $type, $param, $meta = null)
+    public static function newSearch($user, $type, $param, $meta = null, $channel = 'api')
     {
         $cost = config('billing.' . $type);
         $customer = $user->customer;
@@ -91,7 +92,7 @@ class Search extends Model
 
 
             $parent_balance = $parent->balance;
-            $parent_charge_fetch = optional($customer->charges)->$type_key;
+            $parent_charge_fetch = optional($parent->charges)->$type_key;
             $parent_charge = ($parent_charge_fetch) ?: $cost;
 
             if ($parent_balance < $parent_charge) {
@@ -116,7 +117,9 @@ class Search extends Model
 
         if ($wallet_balance >= $cost && ($float > 0)) {
 
+            $balance_before = $wallet->balance;
             $withdrawal = $wallet->withdraw($cost, ['type' => 'customer_charge']);
+            $balance_after = $wallet->balance;
 
             if ($withdrawal) {
 
@@ -145,7 +148,9 @@ class Search extends Model
                     'transaction_id' => $withdrawal->id,
                     'customer_id' => $customer->id,
                     'cost' => $cost,
-                    'wholesale_cost' => $charge
+                    'wholesale_cost' => $charge,
+                    'balance_before' => $balance_before,
+                    'balance_after' => $balance_after,
                 ]);
 
 

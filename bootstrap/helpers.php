@@ -734,3 +734,7 @@ function check_call($check, $query, $extra_params = [])
 }
 
 
+function retainArrayElementsByKeys($array, $keysToRetain) {
+    $keysToRetain = array_flip($keysToRetain);
+    return array_intersect_key($array, $keysToRetain);
+}

@@ -39,15 +39,25 @@ class Customer extends Model implements Wallet
     public function setChargesAttribute($value)
     {
         if (is_object($value)) {
-            $this->attributes['charges'] = json_decode(json_encode($value), true);
+            $charges = json_decode(json_encode($value), true);
         } else {
-            $this->attributes['charges'] = is_array($value) ? json_encode($value) : $value;
+            $charges = is_array($value) ? json_encode($value) : $value;
         }
+
+        if (isset($charges) && is_array($charges)) {
+            $charges = collect($charges)
+                ->filter(function ($value) {
+                    return intval($value) > 0;
+                })
+                ->toArray();
+        }
+
+        $this->attributes['charges'] = $charges;
     }
 
     public function getChargesAttribute($value)
     {
-        return json_decode($value);
+        return is_string($value) ? json_decode($value) : $value;
     }
 
 
@@ -94,6 +104,30 @@ class Customer extends Model implements Wallet
     {
         return $this->users()->where('type', 'api')->latest()->first();
 
+    }
+
+    public function getApiListAttribute()
+    {
+        $charges = collect($this->charges);
+
+        $filtered = $charges->filter(function ($value, $key) {
+            return !is_null($value) && $value !== 0;
+        });
+
+        return $filtered->keys()->all();
+    }
+
+    public function getAllowedServicesAttribute()
+    {
+        $service_details = config('billing.services');
+        $customer_service_list = \customer()->api_list;
+        return retainArrayElementsByKeys($service_details, $customer_service_list);
+    }
+
+
+    public function getBalanceLabelAttribute()
+    {
+        return 'KES ' . number_format($this->balance);
     }
 
 

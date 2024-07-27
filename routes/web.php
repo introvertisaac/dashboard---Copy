@@ -18,6 +18,7 @@ Route::post('login', [GuestController::class, 'loginProcess']);
 Route::middleware('auth')->group(callback: function () {
 
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('dashboard/{customer_uuid}', [DashboardController::class, 'index'])->name('dashboard.customer');
     Route::get('customers', [CustomerController::class, 'index'])->name('customers');
     Route::get('settings', [SettingController::class, 'index'])->name('settings');
     Route::get('users', [UserController::class, 'index'])->name('users');

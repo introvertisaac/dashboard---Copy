@@ -24,7 +24,7 @@
                     <li class="menu-item menu_checks">
                         <a href="{{route('checks')}}" class="menu_checks">
                             <div class="icon"><i class="icon-file"></i></div>
-                            <div class="text">Government Checks</div>
+                            <div class="text">Verifications</div>
                         </a>
                     </li>
                     <li class="menu-item d-none">

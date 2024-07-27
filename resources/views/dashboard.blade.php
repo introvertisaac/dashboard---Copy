@@ -13,10 +13,19 @@
 
     </style>
 
-    <div class="mb-20">
-        <h4>Welcome<span class="tf-color"> Jane Doe</span>,</h4>
-        <p>Here is an overview of the system</p>
-    </div>
+    @if ($customer_uuid)
+        <div class="mb-20">
+            <h4>You're viewing dashboard for <span class="tf-color"> {{user('name')}}</span>,</h4>
+            <p>Here is an overview of the system</p>
+        </div>
+
+        @else
+        <div class="mb-20">
+            <h4>Welcome<span class="tf-color"> {{user('name')}}</span>,</h4>
+            <p>Here is an overview of the system</p>
+        </div>
+    @endif
+
 
 
     <div class="tf-section-4 mb-30 mt-20">
@@ -46,7 +55,7 @@
                         <br>
                         <div>
                             <div class="mb-2 fs-4">Credit Balance</div>
-                            <h4>KES 57,920.00</h4>
+                            <h4>{{$balance}}</h4>
                         </div>
                     </div>
 
@@ -81,7 +90,7 @@
 
                     <div>
                         <div class="mb-2 fs-4"> API Calls</div>
-                        <h4>308 <span class="" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight1"
+                        <h4>{{number_format($searches_count)}} <span class="" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight1"
                                       aria-controls="offcanvasRight1">
 
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -163,8 +172,8 @@
 
                     <br>
                     <div>
-                        <div class="mb-2 fs-4">API Users</div>
-                        <h4>1</h4>
+                        <div class="mb-2 fs-4">Users</div>
+                        <h4>{{$customer_users_count}}</h4>
                     </div>
                 </div>
 
@@ -191,8 +200,8 @@
 
                     <br>
                     <div>
-                        <div class="mb-2 fs-4">Successful Verifications</div>
-                        <h4>3840</h4>
+                        <div class="mb-2 fs-4">Verification Services</div>
+                        <h4>{{$service_count}}</h4>
                     </div>
                 </div>
 
@@ -215,7 +224,7 @@
                         <div class="flex items-center">
                             <div>
                                 <div class="body-text mb-2 bold fs-4">API calls this year</div>
-                                <h4>308</h4>
+                                <h4>{{number_format($searches_count_year)}}</h4>
                             </div>
                         </div>
                     </div>
@@ -227,7 +236,7 @@
                         <div class="flex items-center">
                             <div>
                                 <div class="body-text mb-2 bold fs-4">API calls this month</div>
-                                <h4>10</h4>
+                                <h4>{{number_format($searches_count_month)}}</h4>
                             </div>
                         </div>
                     </div>
@@ -239,7 +248,7 @@
                         <div class="flex items-center">
                             <div>
                                 <div class="body-text mb-2 bold fs-4">API calls today</div>
-                                <h4>10</h4>
+                                <h4>{{number_format($searches_count_today)}}</h4>
                             </div>
                         </div>
                     </div>
@@ -250,6 +259,9 @@
 
         </div>
 
+
+        @if (!$customer_uuid)
+
         <div class="wg-box">
             <div class="flex items-center justify-between">
                 <h5 class="fs-4">Recent Activity</h5>
@@ -257,6 +269,8 @@
             <div class="wg-table">
                 <ul class="flex flex-column gap14">
 
+
+                    @foreach($activities as $activity)
                     <li class="product-item p-3">
                         <div class="icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -269,9 +283,9 @@
                         <div class="flex items-center justify-between flex-grow">
 
                             <div>
-                                <a href="" class="body-title-2">API key generated for ABC Inc.</a>
+                                <a href="" class="body-title-2">{{$activity->description}} {{(optional($activity->subject)->name) ? ' - '.$activity->subject->name : ''}}</a>
                                 <br>
-                                <div class="text-tiny mt-3">10 mins ago</div>
+                                <div title="{{$activity->created_at}}" class="text-tiny mt-3">{{$activity->created_at->diffForHumans()}}</div>
 
                             </div>
 
@@ -279,31 +293,13 @@
                         </div>
                     </li>
 
-                    <li class="product-item p-3">
-                        <div class="icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                 fill="none" stroke="#E76C21" stroke-width="2" stroke-linecap="round"
-                                 stroke-linejoin="round" class="feather feather-activity">
-                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-                            </svg>
-
-                        </div>
-                        <div class="flex items-center justify-between flex-grow">
-
-                            <div>
-                                <a href="" class="body-title-2">ABC registered</a>
-                                <br>
-                                <div class="text-tiny mt-3">20 mins ago</div>
-
-                            </div>
-
-
-                        </div>
-                    </li>
+                    @endforeach
 
                 </ul>
             </div>
         </div>
+
+        @endif
 
     </div>
 

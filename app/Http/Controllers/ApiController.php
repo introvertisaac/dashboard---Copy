@@ -22,7 +22,7 @@ class ApiController extends Controller
     {
         $idnumber = $request->get('idnumber');
 
-        $transaction = Search::newSearch($request->user(), 'id_check', $idnumber);
+        $transaction = Search::newSearch($request->user(), 'national_id', $idnumber);
 
         if ($transaction) {
 
@@ -54,7 +54,7 @@ class ApiController extends Controller
     {
         $idnumber = $request->get('idnumber');
 
-        $transaction = Search::newSearch($request->user(), 'alien_id_check', $idnumber);
+        $transaction = Search::newSearch($request->user(), 'alien_id', $idnumber);
 
 
         if ($transaction) {
@@ -88,7 +88,7 @@ class ApiController extends Controller
     {
         $idnumber = $request->get('pinnumber');
 
-        $transaction = Search::newSearch($request->user(), 'kra_pin_check', $idnumber);
+        $transaction = Search::newSearch($request->user(), 'kra', $idnumber);
 
 
         if ($transaction) {
@@ -121,7 +121,7 @@ class ApiController extends Controller
     {
         $idnumber = $request->get('idnumber');
 
-        $transaction = Search::newSearch($request->user(), 'dl_check', $idnumber);
+        $transaction = Search::newSearch($request->user(), 'dl', $idnumber);
 
 
         if ($transaction) {
@@ -156,7 +156,7 @@ class ApiController extends Controller
 
         $bank_account = $bank_id . '-' . $account;
 
-        $transaction = Search::newSearch($request->user(), 'bank_check', $bank_account);
+        $transaction = Search::newSearch($request->user(), 'bank', $bank_account);
 
         if ($transaction) {
 
@@ -206,7 +206,7 @@ class ApiController extends Controller
     {
         $plate = $request->get('plate');
 
-        $transaction = Search::newSearch($request->user(), 'plate_check', $plate);
+        $transaction = Search::newSearch($request->user(), 'plate', $plate);
 
 
         if ($transaction) {
@@ -251,7 +251,7 @@ class ApiController extends Controller
     {
         $businessnumber = $request->get('regnumber');
 
-        $transaction = Search::newSearch($request->user(), 'brs_check', $businessnumber);
+        $transaction = Search::newSearch($request->user(), 'brs', $businessnumber);
 
         if ($transaction) {
 

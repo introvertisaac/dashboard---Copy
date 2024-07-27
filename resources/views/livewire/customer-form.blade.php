@@ -41,7 +41,7 @@
             <h6 class="fs-5 fw-light text-muted">SERVICE CHARGE CONFIGURATIONS</h6>
             @foreach ($services as $service_key => $service)
                 <div class="col-md-6 form-group mt-1 pt-4">
-                    <label for="{{$service_key}}ApiCharge" class="body-title mb-3">{{$service['name']}} API
+                    <label for="{{$service_key}}ApiCharge" class="body-title mb-3">{{$service['label']}} API
                         Charge</label>
                     <input wire:key="charges.{{$service_key}}" wire:model="charges.{{$service_key}}" type="text" class="form-control mb-3"
                            placeholder="Please enter the amount">

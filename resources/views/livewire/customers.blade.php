@@ -1,5 +1,6 @@
 <div>
 
+    @include('partials.alerts')
     <div class="flex items-center flex-wrap justify-between gap20 mb-5">
         <div class="mb-20">
             <h4>Customers</h4>
@@ -37,9 +38,11 @@
                     <th>Customer Name</th>
                     <th>Phone Number</th>
                     <th>Primary Email</th>
-                    <th>Website</th>
+                    <th>Balance</th>
                     <th>Number of APIs</th>
-                    <th>Actions</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -49,9 +52,11 @@
                         <td>{{$customer->name}}</td>
                         <td>{{$customer->phone}}</td>
                         <td>{{$customer->primary_email}}</td>
-                        <td>{{$customer->website}}</td>
+                        <td>{{$customer->balance_label}}</td>
                         <td>{{$customer->api_count}}</td>
                         <td><a class="" wire:click="edit('{{$customer->uuid}}')">Manage</a></td>
+                        <td><a class="" wire:click="allocate('{{$customer->uuid}}')">Allocate Credit</a></td>
+                        <td><a class="" href="{{route('dashboard.customer',['customer_uuid'=>$customer->uuid])}}">View Dashboard</a></td>
                     </tr>
                 @endforeach
 
