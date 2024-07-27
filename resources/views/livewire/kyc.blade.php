@@ -324,7 +324,10 @@
 
         @else
 
-            <div class="alert alert-info"><h6> No records found</h6> </div>
+
+        <div class="block-warning type-custom w-full fs-4 my-3">
+            No records found
+        </div>
 
         @endif
 

@@ -212,7 +212,8 @@
 
     </div>
     <div class="tf-section-7 mb-30">
-        <!-- chart -->
+
+
         <div class="wg-box">
             <div id="line-chart-5"></div>
 
