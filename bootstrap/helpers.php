@@ -703,14 +703,14 @@ function check_call($check, $query, $extra_params = [])
     ];
 
 
-  /*  $allowed_types = ['
-        national_id',
-        'alien_id',
-        'plate',
-        'dl',
-        'kra',
-        'brs'];
-  */
+    /*  $allowed_types = ['
+          national_id',
+          'alien_id',
+          'plate',
+          'dl',
+          'kra',
+          'brs'];
+    */
 
 
     $url = "$base_url/$check/$query";
@@ -734,7 +734,16 @@ function check_call($check, $query, $extra_params = [])
 }
 
 
-function retainArrayElementsByKeys($array, $keysToRetain) {
+function retainArrayElementsByKeys($array, $keysToRetain)
+{
     $keysToRetain = array_flip($keysToRetain);
     return array_intersect_key($array, $keysToRetain);
+}
+
+function service_label($service_id)
+{
+    $services = config('billing.services');
+    $service_label = \Illuminate\Support\Arr::get($services,$service_id.'.label');
+
+    return $service_label;
 }
