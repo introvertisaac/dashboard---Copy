@@ -28,7 +28,7 @@ class DashboardController extends Controller
 
         $activities = $customer->users()->first()->actions()->latest()->take(4)->get();
 
-        return view('dashboard', compact('service_count', 'customer_users_count', 'customer_uuid', 'activities', 'balance', 'searches_count', 'searches_count_today', 'searches_count_month', 'searches_count_year'));
+        return view('dashboard', compact('customer','service_count', 'customer_users_count', 'customer_uuid', 'activities', 'balance', 'searches_count', 'searches_count_today', 'searches_count_month', 'searches_count_year'));
     }
 
 }

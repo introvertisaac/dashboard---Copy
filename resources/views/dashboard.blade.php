@@ -15,7 +15,7 @@
 
     @if ($customer_uuid)
         <div class="mb-20">
-            <h4>You're viewing dashboard for <span class="tf-color"> {{user('name')}}</span>,</h4>
+            <h4>You're viewing dashboard for <span class="tf-color"> {{$customer->name}}</span>,</h4>
             <p>Here is an overview of the system</p>
         </div>
 
