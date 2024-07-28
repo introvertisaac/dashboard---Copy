@@ -54,9 +54,10 @@
                         <td>{{$customer->primary_email}}</td>
                         <td>{{$customer->balance_label}}</td>
                         <td>{{$customer->api_count}}</td>
-                        <td><a class="" wire:click="edit('{{$customer->uuid}}')">Manage</a></td>
-                        <td><a class="" wire:click="allocate('{{$customer->uuid}}')">Allocate Credit</a></td>
-                        <td><a class="" href="{{route('dashboard.customer',['customer_uuid'=>$customer->uuid])}}">View Dashboard</a></td>
+                        <td><a wire:click="edit('{{$customer->uuid}}')">Manage</a></td>
+                        <td><a wire:click="allocate('{{$customer->uuid}}')">Allocate Credit</a></td>
+                        <td><a target="_blank" href="{{route('dashboard.customer',['customer_uuid'=>$customer->uuid])}}">View
+                                Dashboard</a></td>
                     </tr>
                 @endforeach
 
@@ -68,51 +69,51 @@
         </div>
 
 
-  {{--      <div class="wg-table table-all-user">
-            <ul class="table-title flex gap20 mb-14">
-                <li>
-                    <div class="body-title">Customer Name</div>
-                </li>
-                <li>
-                    <div class="body-title">Phone Number</div>
-                </li>
-                <li>
-                    <div class="body-title">Primary Email</div>
-                </li>
+        {{--      <div class="wg-table table-all-user">
+                  <ul class="table-title flex gap20 mb-14">
+                      <li>
+                          <div class="body-title">Customer Name</div>
+                      </li>
+                      <li>
+                          <div class="body-title">Phone Number</div>
+                      </li>
+                      <li>
+                          <div class="body-title">Primary Email</div>
+                      </li>
 
-                <li>
-                    <div class="body-title">Number of APIs</div>
-                </li>
-                <li>
-                    <div class="body-title">Actions</div>
-                </li>
+                      <li>
+                          <div class="body-title">Number of APIs</div>
+                      </li>
+                      <li>
+                          <div class="body-title">Actions</div>
+                      </li>
 
-            </ul>
-            <ul class="flex flex-column">
+                  </ul>
+                  <ul class="flex flex-column">
 
-                @foreach($customers as $customer)
-                    <li class="user-item gap14">
-                        <div class="flex items-center justify-between gap20 flex-grow">
-                            <div class="body-text">{{$customer->name}}</div>
-                            <div class="body-text">{{$customer->phone}}</div>
-                            <div class="body-text">{{$customer->primary_email}}</div>
-                            <div class="body-text">{{$customer->api_count}}</div>
-                            <div class="list-icon-functionx">
+                      @foreach($customers as $customer)
+                          <li class="user-item gap14">
+                              <div class="flex items-center justify-between gap20 flex-grow">
+                                  <div class="body-text">{{$customer->name}}</div>
+                                  <div class="body-text">{{$customer->phone}}</div>
+                                  <div class="body-text">{{$customer->primary_email}}</div>
+                                  <div class="body-text">{{$customer->api_count}}</div>
+                                  <div class="list-icon-functionx">
 
-                                <a class=""
-                                   wire:click="edit('{{$customer->uuid}}')" --}}{{-- #href="{{route('customers.edit',$customer)}}"--}}{{-->
-                                    Manage</a>
+                                      <a class=""
+                                         wire:click="edit('{{$customer->uuid}}')" --}}{{-- #href="{{route('customers.edit',$customer)}}"--}}{{-->
+                                          Manage</a>
 
-                            </div>
-                        </div>
-                    </li>
-                @endforeach
+                                  </div>
+                              </div>
+                          </li>
+                      @endforeach
 
-            </ul>
-        </div>
+                  </ul>
+              </div>
 
 
-        {{ $customers->links() }}--}}
+              {{ $customers->links() }}--}}
 
     </div>
 

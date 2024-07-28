@@ -30,7 +30,7 @@ class DashboardController extends Controller
 
         $activities = $customer->users()->first()->actions()->latest()->take(4)->get();
 
-        $api_group_counts = Search::selectRaw('search_type, count(*) as count')
+        $api_group_counts = Search::where('customer_id', $customer->id)->selectRaw('search_type, count(*) as count')
             ->groupBy('search_type')
             ->get();
 
