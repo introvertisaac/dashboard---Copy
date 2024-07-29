@@ -23,11 +23,12 @@
 
                 <fieldset class="password">
                     <div class="body-title mb-5">API Client ID</div>
-                    <input readonly class="password-input" wire:model="api_client_id" type="text" id="api_client_id"
+                    <span class="d-none" id="api_client_id">{{$api_client_id}}</span>
+                    <input readonly class="password-input" wire:model="api_client_id" type="text"
                            placeholder="" name="api_client_id" tabindex="0" value=""
                            aria-required="true"
                            required="">
-                    <span title="Copy to Clipboard" data-target="#api_secret"
+                    <span title="Copy to Clipboard" data-target="#api_client_id"
                           class="input-icon text-dark clipboard_copy">
                         <i class="icon-copy"></i>
                     </span>
@@ -42,7 +43,7 @@
                 <fieldset class="password">
                     <span class="d-none" id="api_secret">{{$api_secret}}</span>
                     <div class="body-title mb-5">API Secret Key</div>
-                    <input readonly class="password-input" wire:model="api_secret" type="password" id="api_secret"
+                    <input readonly class="password-input" wire:model="api_secret" type="password"
                            placeholder="" name="api_secret" tabindex="0" value=""
                            aria-required="true"
                            required="">
@@ -69,14 +70,7 @@
         <div class="row w-75">
             <div class="form-group">
                 <fieldset class="password">
-                    <input readonly class="password-input" wire:model="docs_url" type="text" id="docs_url"
-                           placeholder="" name="docs_url" tabindex="0" value=""
-                           aria-required="true"
-                           required="">
-                    <span class="input-icon text-dark">
-                                    <i class="icon-copy"></i>
-                                </span>
-                    @error('docs_url') <span class="error text-danger d-block">{{ $message }}</span> @enderror
+                    <span><a target="_blank" href="{{route('scramble.docs.ui')}}">{{route('scramble.docs.ui')}}</a></span>
                 </fieldset>
 
 

@@ -291,8 +291,8 @@
                     <th>KYC Type</th>
                     <th>Search</th>
                     <th>Channel</th>
-                    <th>Tracking ID</th>
                     <th>Timestamp</th>
+                    <th>Tracking ID</th>
                 </tr>
                 </thead>
                 <tbody>
