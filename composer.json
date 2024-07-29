@@ -8,6 +8,7 @@
         "php": "^8.2",
         "ext-curl": "*",
         "bavix/laravel-wallet": "^11.1",
+        "dedoc/scramble": "^0.11.8",
         "doctrine/dbal": "^4.0",
         "laracasts/flash": "^3.2",
         "laravel/framework": "^11.9",

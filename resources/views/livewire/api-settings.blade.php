@@ -8,11 +8,13 @@
         </div>
 
         <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10 d-none"><a wire:click="generate()"
-                                                                                   {{--href="{{route('customers.create')}}"--}}
-                                                                                   class="button w-full">Generate New
+                                                                                          {{--href="{{route('customers.create')}}"--}}
+                                                                                          class="button w-full">Generate
+                New
                 Credentials</a>
         </ul>
     </div>
+
 
     <form wire:submit.prevent="api_settings" class="form-login flex flex-column gap16 pt-2">
         <div class="row w-75">
@@ -25,30 +27,32 @@
                            placeholder="" name="api_client_id" tabindex="0" value=""
                            aria-required="true"
                            required="">
-                    <span class="show-pass text-dark d-none">
-                                  <i class="icon-eye-off view"></i>
-                                    <i class="icon-eye hide"></i>
-                                </span>
+                    <span title="Copy to Clipboard" data-target="#api_secret"
+                          class="input-icon text-dark clipboard_copy">
+                        <i class="icon-copy"></i>
+                    </span>
                     @error('api_client_id') <span class="error text-danger d-block">{{ $message }}</span> @enderror
                 </fieldset>
 
 
             </div>
-            <div class="col-md-6 form-group">
 
+
+            <div class="col-md-6 form-group">
                 <fieldset class="password">
+                    <span class="d-none" id="api_secret">{{$api_secret}}</span>
                     <div class="body-title mb-5">API Secret Key</div>
                     <input readonly class="password-input" wire:model="api_secret" type="password" id="api_secret"
                            placeholder="" name="api_secret" tabindex="0" value=""
                            aria-required="true"
                            required="">
-                    <span class="show-pass text-dark">
-                                    <i class="icon-eye-off view"></i>
-                                    <i class="icon-eye hide"></i>
-                                </span>
+                    <span title="Copy to Clipboard" data-target="#api_secret"
+                          class="input-icon text-dark clipboard_copy">
+                        <i class="icon-copy"></i>
+                    </span>
                     @error('api_secret') <span class="error text-danger d-block">{{ $message }}</span> @enderror
-                </fieldset>
 
+                </fieldset>
 
             </div>
         </div>
@@ -69,9 +73,8 @@
                            placeholder="" name="docs_url" tabindex="0" value=""
                            aria-required="true"
                            required="">
-                    <span class="show-pass text-dark d-none">
-                                    <i class="icon-copy view"></i>
-                                    <i class="icon-copy hide"></i>
+                    <span class="input-icon text-dark">
+                                    <i class="icon-copy"></i>
                                 </span>
                     @error('docs_url') <span class="error text-danger d-block">{{ $message }}</span> @enderror
                 </fieldset>
@@ -85,3 +88,4 @@
 
 
 </div>
+

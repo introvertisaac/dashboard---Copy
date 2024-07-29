@@ -32,6 +32,7 @@ class DashboardController extends Controller
 
         $api_group_counts = Search::where('customer_id', $customer->id)->selectRaw('search_type, count(*) as count')
             ->groupBy('search_type')
+            ->orderBy('count','DESC')
             ->get();
 
         $search_chart = Search::where('customer_id', $customer->id)->select([

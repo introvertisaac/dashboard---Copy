@@ -245,3 +245,15 @@ a:hover {
 .modal-body{
     padding: 15px;
 }
+
+input[type="checkbox"]:checked {
+    background-color: #E76C21 !important;
+    border-color: #E76C21 !important;
+}
+
+.input-icon {
+    margin-left: -43px;
+    font-size: 18px;
+    color: var(--Icon);
+    cursor: pointer;
+}

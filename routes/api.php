@@ -15,17 +15,17 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-Route::prefix('v1')->middleware(ApiAuthMiddleware::class)->group(function () {
+Route::middleware('auth:sanctum')->prefix('v1')->middleware(ApiAuthMiddleware::class)->group(function () {
 
-    Route::post('id', [ApiController::class, 'id'])->name('id');
-    Route::post('alienid', [ApiController::class, 'alienid'])->name('alienid');
-    Route::post('business', [ApiController::class, 'business'])->name('business');
-    Route::any('balance', [ApiController::class, 'balance'])->name('balance');
-    Route::any('krapin', [ApiController::class, 'krapin'])->name('krapin');
-    Route::any('dl', [ApiController::class, 'dl'])->name('dl');
-    Route::any('plate', [ApiController::class, 'vehicleplate'])->name('vehicleplate');
-    Route::any('phone', [ApiController::class, 'phone'])->name('phone');
-    Route::any('banklist', [ApiController::class, 'banks'])->name('banklist');
-    Route::any('bank', [ApiController::class, 'bank'])->name('banks');
+    Route::post('id', [ApiController::class, 'id'])->name('National ID');
+    Route::post('alienid', [ApiController::class, 'alienid'])->name('Alien ID');
+    Route::post('dl', [ApiController::class, 'dl'])->name('Driving License');
+    Route::post('krapin', [ApiController::class, 'krapin'])->name('KRA Pin');
+    Route::post('business', [ApiController::class, 'business'])->name('Business');
+    Route::post('plate', [ApiController::class, 'vehicleplate'])->name('Vehicle');
+    //Route::any('phone', [ApiController::class, 'phone'])->name('phone');
+    Route::get('banklist', [ApiController::class, 'banks'])->name('Banks');
+    Route::post('bank', [ApiController::class, 'bank'])->name('Bank Account');
+    Route::get('balance', [ApiController::class, 'balance'])->name('Balance');
 
 });

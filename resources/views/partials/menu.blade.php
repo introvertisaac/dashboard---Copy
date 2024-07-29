@@ -63,6 +63,16 @@
                         <div class="text">Settings</div>
                     </a>
                 </li>
+
+
+                <li class="menu-item">
+                    <a class="" target="_blank" href="{{route('scramble.docs.ui')}}">
+                        <div class="icon"><i class="icon-code"></i></div>
+                        <div class="text">API Docs</div>
+                    </a>
+                </li>
+
+
                 <li class="menu-item">
                     <a href="{{route('logout')}}">
                         <div class="icon"><i class="icon-log-out"></i></div>

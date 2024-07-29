@@ -17,7 +17,14 @@ use function PHPUnit\Framework\isJson;
 class ApiController extends Controller
 {
     //
-
+    /**
+     * National ID
+     *
+     * Returns the details associated with the submitted national ID number, ensuring the accuracy and validity of the information provided.
+     *
+     * @response array{success:true, response_code:200, message: "ID Details Fetched Successfully", data:array{"first_name":"JANE","last_name":"DOE","other_name":"SMITH","name":"DOE JANE SMITH","gender":"Female","dob":"1990-01-20","citizenship":"Kenyan","id_number":"12345678","serial_no":"987654321","valid":true}, request_id:"00000000-0000-0000-0000-000000000000"}
+     *
+     */
     public function id(IdRequest $request)
     {
         $idnumber = $request->get('idnumber');
@@ -50,6 +57,15 @@ class ApiController extends Controller
 
     }
 
+
+    /**
+     * Alien ID
+     *
+     * Returns the details associated with the submitted alien ID number, ensuring the accuracy and validity of the information provided.
+     *
+     * @response array{success:true, response_code:200, message: "Alien ID Details Fetched Successfully",data:array{"first_name":"FIRSTNAME","last_name":"LASTNAME","other_name":"OTHERNAME","name":"LASTNAME FIRSTNAME OTHERNAME","gender":"Female","dob":"yyyy-mm-dd","citizenship":"Alien","id_number":"52425261","serial_no":"3444124","valid":true}, request_id:"39d81b8f-fcb7-49ff-9405-0ec1c312764e"}
+     *
+     */
     public function alienid(IdRequest $request)
     {
         $idnumber = $request->get('idnumber');
@@ -83,7 +99,14 @@ class ApiController extends Controller
 
     }
 
-
+    /**
+     * KRA PIN
+     *
+     * Returns the details associated with the submitted KRA PIN, ensuring the accuracy and validity of the taxpayer's information provided.
+     *
+     * @response array{success:true,response_code:200,message:"KRA Pin Details Fetched Successfully",data:array{Business_Certificate_Id:"XXXXXXXXX",Email_Addresses:"XXXXXXX@XXXXXXX.XXX",Locality:"XXXXX XX XXXXXXX",PINNo:"XXXXXXXXXXX",Partnership:"X",Paye:"X",Station:"XXXXX XX XXXXXXX",TaxpayerName:"XXXXXXXX XXXXXXX",Tot:"X",Trading_Business_Name:"XXXXXXXX XXXXXXX",Vat:"X"},request_id:"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"}
+     *
+     */
     public function krapin(KrapinRequest $request)
     {
         $idnumber = $request->get('pinnumber');
@@ -117,6 +140,16 @@ class ApiController extends Controller
 
     }
 
+
+    /**
+     * Driving License
+     *
+     * Returns the details associated with the submitted driving license number, ensuring the accuracy and validity of the license holder's information provided.
+     *
+     * @response array{success:true,response_code:200,message:"DL Checked Successfully",data:array{data:array{points:"XX",national_id:"XXXXXXXX",full_name:"XXXXXXXX XXXXXXX XXXXX",address:"XXXXXXX",status:"XXXXX",date_of_issue:"XXXX-XX-XX",foreignConversionDLNumber:null,date_of_expiry:"XXXX-XX-XX",smartDLBookingTestCenter:"XXX",foreignConversionIssueDate:null,phoneNumber:"XXXXXXXXXXXX",city:"XXXXXXX",kra:"XXXXXXXXXX",pdl_number:null,postalAddress:null,date_of_birth:"XX-XXX-XX",id_type:"XXXXXXX",smartDLBookingStatusCd:"XX:XX:XX--XX:XX:XX",hasSmartDl:"XXXXXXXXXXXXXXXXXXXX",foreignConversionOrganization:null,license_number:"XXXXXXXXXX",blood_group:"XXXXXXX",sex:"X",foreignConversionExpiryDate:null,smartDlChipId:null,smartDLBookingDate:"XX-XXX-XX",email:"X@XXXXX.XXX",dlclass:"X",smartDLBookingStatus:"XXXXXX",foreignConversionDtlConversionType:null,smartDLBookingStartDate:"XX-XXX-XX",nationality:"XX",interim_number:"XXXXXXXXX"},status:"ok"},request_id:"XXXXXXXXXXXXXXXXXXXXXXXXXXXXX"}
+     *
+     *
+     */
     public function dl(IdRequest $request)
     {
         $idnumber = $request->get('idnumber');
@@ -149,6 +182,15 @@ class ApiController extends Controller
 
     }
 
+    /**
+     * Bank Account
+     *
+     * Returns the name of the bank account associated with the submitted account details
+     *
+     *
+     * @response array{success:true,response_code:200,message:"Bank Account Checked Successfully",data:array{name:"XXXXXX XXXXX XXXXXXX",account_number:"XXXXXXXXXX",bank_name:"XXX"},request_id:"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"}
+     *
+     */
     public function bank(BankAccountRequest $request)
     {
         $bank_id = $request->get('bankid');
@@ -201,7 +243,15 @@ class ApiController extends Controller
 
     }
 
-
+    /**
+     * Vehicle
+     *
+     * Returns the vehicle details associated with the submitted number plate,
+     *
+     *
+     * @response array{success:true,response_code:200,message:"Vehicle Plate Checked Successfully",data:array{Details:"XXXXXXX",Status:"XX",caveat:array[],chassisNumber:"XXXXXXXXXXXXXXXXXX",inspection:array[],owner:array[],regNo:"XXXXXXX",vehicle:array{ChassisNo:"XXXXXXXXXXXXXXXXXX",bodyColor:"XXXXX",bodyType:"XXXXXX",carMake:"XXXX",carModel:"XX",dutyAmount:XXXXXXX,dutyDate:"",dutyStatus:"XXXX",engineCapacity:XXXX,engineNumber:"XXX - XXXXXX",entry:array{CPC:"XX",importer_pin:"XXXXXXXXXX",number:"XXXXXXXXXXXXXXXXX"},fuel_type:"XX",grossweight:XXXX,logbookNumber:array{LOGBOOK_NUMBER:"XXXXXXXXXXXXXXX",SERIAL_NO:"XXXXXXXXX"},passengerCapacity:X,purpose:"XXXXXXX",regNo:"XXXXXXX",regStatus:"XXXXXXXXXX",registrationDate:"XXXX-XX-XX",tareweight:XXXX,vehiceType:"XXXXXXXXXXXXX",yearOfManufacture:"XXXX"}},request_id:"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"}
+     *
+     */
     public function vehicleplate(VehiclePlateRequest $request)
     {
         $plate = $request->get('plate');
@@ -247,6 +297,16 @@ class ApiController extends Controller
         ]);
     }
 
+
+    /**
+     * Business
+     *
+     * Returns the business details associated with the submitted registration number
+     *
+     *
+     * @response array{success:true,response_code:200,message:"Business Details Fetched Successfully",data:array{status:"XXXXXXXXXX",registration_date:"XX XXXX XXXX",postal_address:"XXXXX - XXXXX",physical_address:"XXXXX-XXXXXXXXXX/XXX & XXX, XXXXXXX, Fl: Xst floor, Room/Door: X, XXXXX-XXXXXXXXXX/XXX & XXX, XXXXXXX",phone_number:"+XXXXXXXXXXXX",kra_pin:"XXXXXXXXXXX",email:"XXXXXXXX@XXXXX.XXX",business_name:"XXXXXXXX XXXXXXXX XXXXX XXXXXXX",partners:array{}  },request_id:"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"}
+     *
+     */
     public function business(BusinessRequest $request)
     {
         $businessnumber = $request->get('regnumber');
@@ -255,12 +315,11 @@ class ApiController extends Controller
 
         if ($transaction) {
 
-            $call_response = FetchController::business($businessnumber);
+            $call_response = check_call('brs', $businessnumber);
 
             if (isJson($call_response)) {
 
-                $call_response_decode = json_decode($call_response, true);
-                $records = Arr::get($call_response_decode, 'records.0');
+                $records = Arr::get($call_response, 'records.0');
 
                 $transaction->update([
                     'response' => $records
@@ -282,6 +341,13 @@ class ApiController extends Controller
 
     }
 
+
+    /**
+     * Balance
+     *
+     * Returns account balance of your customer account
+     *
+     */
     public function balance(Request $request)
     {
         $user = $request->user();
@@ -303,6 +369,13 @@ class ApiController extends Controller
 
     }
 
+
+    /**
+     * Bank List.
+     *
+     * List banks with respective BankIDs for use on the bank account name verification
+     *
+     */
     public function banks(Request $request)
     {
 

@@ -54,8 +54,8 @@
                         <td>{{$customer->primary_email}}</td>
                         <td>{{$customer->balance_label}}</td>
                         <td>{{$customer->api_count}}</td>
-                        <td><a wire:click="edit('{{$customer->uuid}}')">Manage</a></td>
-                        <td><a wire:click="allocate('{{$customer->uuid}}')">Allocate Credit</a></td>
+                        <td><a class="" wire:click="edit('{{$customer->uuid}}')">Manage</a></td>
+                        <td><a class="" wire:click="allocate('{{$customer->uuid}}')">Allocate Credit</a></td>
                         <td><a target="_blank" href="{{route('dashboard.customer',['customer_uuid'=>$customer->uuid])}}">View
                                 Dashboard</a></td>
                     </tr>
