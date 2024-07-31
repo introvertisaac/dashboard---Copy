@@ -361,7 +361,7 @@ class ApiController extends Controller
             'response_code' => 200,
             'message' => 'Account Balance Fetched Successfully',
             'data' => [
-                'balance' => $wallet_balance,
+                'balance' => intval($wallet_balance),
                 'currency' => 'KES'
             ],
             'request_id' => Str::uuid()

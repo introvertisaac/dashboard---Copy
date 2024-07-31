@@ -1,5 +1,5 @@
 <div>
-    <div class="flex items-center flex-wrap justify-between gap20 mb-5">
+    <div class="flex items-center flex-wrap justify-between gap20 mb-5 d-none">
         <div class="mb-20">
             <h4>KYC Verification</h4>
             <p>Select a method below</p>
@@ -183,10 +183,45 @@
                                                                             @if(is_array($subValue))
                                                                                 <div class="section">
                                                                                     @foreach($subValue as $subSubKey => $subSubValue)
+
+
+                                                                                        @if(is_array($subValue))
+                                                                                            <div class="section">
+                                                                                                @foreach($subValue as $subSubKey_ => $subSubValue_)
+
+
+                                                                                                    @if(is_array($subSubValue_))
+                                                                                                        <div class="section">
+                                                                                                            @foreach($subSubValue_ as $subSubKey__ => $subSubValue__)
+
+
+                                                                                                                <p class="data_point">
+                                                                                                                    <strong>{{ ucfirst(str_replace('_', ' ', $subSubKey__)) }}
+                                                                                                                        :</strong> @if(is_array($subSubValue__)) {{print_r($subSubValue__)}} @else {{$subSubValue__}} @endif
+                                                                                                                </p>
+                                                                                                            @endforeach
+                                                                                                        </div>
+                                                                                                    @else
+
+
+
+                                                                                                    <p class="data_point">
+                                                                                                        <strong>{{ ucfirst(str_replace('_', ' ', $subSubKey_)) }}
+                                                                                                            :</strong> {{ $subSubValue_ }}
+                                                                                                    </p>
+                                                                                                    @endif
+                                                                                                @endforeach
+
+                                                                                            </div>
+                                                                                        @else
+
+
                                                                                         <p class="data_point">
                                                                                             <strong>{{ ucfirst(str_replace('_', ' ', $subSubKey)) }}
                                                                                                 :</strong> {{ $subSubValue }}
                                                                                         </p>
+                                                                                        @endif
+
                                                                                     @endforeach
                                                                                 </div>
                                                                             @else
