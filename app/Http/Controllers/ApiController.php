@@ -50,7 +50,23 @@ class ApiController extends Controller
                     'request_id' => $transaction->search_uuid
                 ]);
 
+            }else{
+
+                $transaction->update([
+                    'response' => $call_response
+                ]);
+
+                return response()->json([
+                    'success' => true,
+                    'response_code' => 204,
+                    'message' => 'ID Details Fetched Successfully',
+                    'data' => $call_response,
+                    'request_id' => $transaction->search_uuid
+                ]);
+
             }
+
+
 
         }
 
@@ -87,6 +103,20 @@ class ApiController extends Controller
                 return response()->json([
                     'success' => true,
                     'response_code' => 200,
+                    'message' => 'Alien ID Details Fetched Successfully',
+                    'data' => $call_response,
+                    'request_id' => $transaction->search_uuid
+                ]);
+
+            }else{
+
+                $transaction->update([
+                    'response' => $call_response
+                ]);
+
+                return response()->json([
+                    'success' => true,
+                    'response_code' => 204,
                     'message' => 'Alien ID Details Fetched Successfully',
                     'data' => $call_response,
                     'request_id' => $transaction->search_uuid
@@ -133,6 +163,20 @@ class ApiController extends Controller
                     'request_id' => $transaction->search_uuid
                 ]);
 
+            }else{
+
+                $transaction->update([
+                    'response' => $call_response
+                ]);
+
+                return response()->json([
+                    'success' => true,
+                    'response_code' => 204,
+                    'message' => 'KRA Pin Details Fetched Successfully',
+                    'data' => $call_response,
+                    'request_id' => $transaction->search_uuid
+                ]);
+
             }
 
         }
@@ -170,6 +214,20 @@ class ApiController extends Controller
                 return response()->json([
                     'success' => true,
                     'response_code' => 200,
+                    'message' => 'DL Checked Successfully',
+                    'data' => $call_response,
+                    'request_id' => $transaction->search_uuid
+                ]);
+
+            }else{
+
+                $transaction->update([
+                    'response' => $call_response
+                ]);
+
+                return response()->json([
+                    'success' => true,
+                    'response_code' => 204,
                     'message' => 'DL Checked Successfully',
                     'data' => $call_response,
                     'request_id' => $transaction->search_uuid
@@ -278,6 +336,20 @@ class ApiController extends Controller
                     'request_id' => $transaction->search_uuid
                 ]);
 
+            }else{
+
+                $transaction->update([
+                    'response' => $call_response
+                ]);
+
+                return response()->json([
+                    'success' => true,
+                    'response_code' => 204,
+                    'message' => 'Vehicle Plate Checked Successfully',
+                    'data' => $call_response,
+                    'request_id' => $transaction->search_uuid
+                ]);
+
             }
 
         }
@@ -331,6 +403,20 @@ class ApiController extends Controller
                     'response_code' => 200,
                     'message' => 'Business Details Fetched Successfully',
                     'data' => $records,
+                    'request_id' => $transaction->search_uuid
+                ]);
+
+            }else{
+
+                $transaction->update([
+                    'response' => $call_response
+                ]);
+
+                return response()->json([
+                    'success' => true,
+                    'response_code' => 204,
+                    'message' => 'Business Details Fetched Successfully',
+                    'data' => $call_response,
                     'request_id' => $transaction->search_uuid
                 ]);
 
@@ -466,6 +552,20 @@ class ApiController extends Controller
                 return response()->json([
                     'success' => true,
                     'response_code' => 200,
+                    'message' => 'Collateral Check Fetched Successfully',
+                    'data' => $call_response,
+                    'request_id' => $transaction->search_uuid
+                ]);
+
+            }else{
+
+                $transaction->update([
+                    'response' => $call_response
+                ]);
+
+                return response()->json([
+                    'success' => true,
+                    'response_code' => 204,
                     'message' => 'Collateral Check Fetched Successfully',
                     'data' => $call_response,
                     'request_id' => $transaction->search_uuid

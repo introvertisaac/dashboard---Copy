@@ -147,22 +147,30 @@
                             margin: 5px 0;
                         }
                     </style>
+                    <div class="container">
 
-                    @if(is_array($check_result))
-                        <div class="container">
+                        <h6 class="mb-3">
+                            <svg width="46" height="46" viewBox="0 0 46 46" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <rect width="46" height="46" rx="23" fill="#FFFBF8"></rect>
+                                <path
+                                    d="M31.0625 21.5H24.5C23.9033 21.5 23.331 21.2629 22.909 20.841C22.4871 20.419 22.25 19.8467 22.25 19.25V12.6875C22.25 12.6378 22.2302 12.5901 22.1951 12.5549C22.1599 12.5198 22.1122 12.5 22.0625 12.5H17.75C16.9544 12.5 16.1913 12.8161 15.6287 13.3787C15.0661 13.9413 14.75 14.7044 14.75 15.5V30.5C14.75 31.2956 15.0661 32.0587 15.6287 32.6213C16.1913 33.1839 16.9544 33.5 17.75 33.5H28.25C29.0456 33.5 29.8087 33.1839 30.3713 32.6213C30.9339 32.0587 31.25 31.2956 31.25 30.5V21.6875C31.25 21.6378 31.2302 21.5901 31.1951 21.5549C31.1599 21.5198 31.1122 21.5 31.0625 21.5Z"
+                                    fill="#E76C21"></path>
+                                <path
+                                    d="M30.6509 19.8403L23.9098 13.0992C23.8967 13.0861 23.8801 13.0773 23.8619 13.0737C23.8438 13.0701 23.825 13.072 23.8079 13.079C23.7908 13.0861 23.7762 13.098 23.7659 13.1134C23.7556 13.1287 23.7501 13.1468 23.75 13.1653V19.2501C23.75 19.449 23.829 19.6398 23.9697 19.7804C24.1103 19.9211 24.3011 20.0001 24.5 20.0001H30.5848C30.6033 20 30.6214 19.9945 30.6367 19.9842C30.6521 19.9739 30.664 19.9593 30.6711 19.9422C30.6781 19.9251 30.68 19.9063 30.6764 19.8882C30.6728 19.87 30.664 19.8534 30.6509 19.8403Z"
+                                    fill="#E76C21"></path>
+                            </svg> {{$check_number}}</h6>
+                        <hr>
 
-                            <h6 class="mb-3">
-                                <svg width="46" height="46" viewBox="0 0 46 46" fill="none"
-                                     xmlns="http://www.w3.org/2000/svg">
-                                    <rect width="46" height="46" rx="23" fill="#FFFBF8"></rect>
-                                    <path
-                                        d="M31.0625 21.5H24.5C23.9033 21.5 23.331 21.2629 22.909 20.841C22.4871 20.419 22.25 19.8467 22.25 19.25V12.6875C22.25 12.6378 22.2302 12.5901 22.1951 12.5549C22.1599 12.5198 22.1122 12.5 22.0625 12.5H17.75C16.9544 12.5 16.1913 12.8161 15.6287 13.3787C15.0661 13.9413 14.75 14.7044 14.75 15.5V30.5C14.75 31.2956 15.0661 32.0587 15.6287 32.6213C16.1913 33.1839 16.9544 33.5 17.75 33.5H28.25C29.0456 33.5 29.8087 33.1839 30.3713 32.6213C30.9339 32.0587 31.25 31.2956 31.25 30.5V21.6875C31.25 21.6378 31.2302 21.5901 31.1951 21.5549C31.1599 21.5198 31.1122 21.5 31.0625 21.5Z"
-                                        fill="#E76C21"></path>
-                                    <path
-                                        d="M30.6509 19.8403L23.9098 13.0992C23.8967 13.0861 23.8801 13.0773 23.8619 13.0737C23.8438 13.0701 23.825 13.072 23.8079 13.079C23.7908 13.0861 23.7762 13.098 23.7659 13.1134C23.7556 13.1287 23.7501 13.1468 23.75 13.1653V19.2501C23.75 19.449 23.829 19.6398 23.9697 19.7804C24.1103 19.9211 24.3011 20.0001 24.5 20.0001H30.5848C30.6033 20 30.6214 19.9945 30.6367 19.9842C30.6521 19.9739 30.664 19.9593 30.6711 19.9422C30.6781 19.9251 30.68 19.9063 30.6764 19.8882C30.6728 19.87 30.664 19.8534 30.6509 19.8403Z"
-                                        fill="#E76C21"></path>
-                                </svg> {{$check_number}}</h6>
-                            <hr>
+                        @if(is_null($check_result))
+
+                        <h6>No data found</h6>
+
+                        @endif
+
+
+                        @if(is_array($check_result))
+
                             @foreach($check_result as $key => $value)
                                 @if(is_array($value))
                                     <div class="section">
@@ -184,42 +192,41 @@
                                                                                 <div class="section">
                                                                                     @foreach($subValue as $subSubKey => $subSubValue)
 
-
                                                                                         @if(is_array($subValue))
                                                                                             <div class="section">
                                                                                                 @foreach($subValue as $subSubKey_ => $subSubValue_)
 
-
                                                                                                     @if(is_array($subSubValue_))
-                                                                                                        <div class="section">
+                                                                                                        <div
+                                                                                                            class="section">
                                                                                                             @foreach($subSubValue_ as $subSubKey__ => $subSubValue__)
-
 
                                                                                                                 <p class="data_point">
                                                                                                                     <strong>{{ ucfirst(str_replace('_', ' ', $subSubKey__)) }}
-                                                                                                                        :</strong> @if(is_array($subSubValue__)) {{print_r($subSubValue__)}} @else {{$subSubValue__}} @endif
+                                                                                                                        :</strong> @if(is_array($subSubValue__))
+                                                                                                                        {{print_r($subSubValue__)}}
+                                                                                                                    @else
+                                                                                                                        {{$subSubValue__}}
+                                                                                                                    @endif
                                                                                                                 </p>
                                                                                                             @endforeach
                                                                                                         </div>
                                                                                                     @else
 
-
-
-                                                                                                    <p class="data_point">
-                                                                                                        <strong>{{ ucfirst(str_replace('_', ' ', $subSubKey_)) }}
-                                                                                                            :</strong> {{ $subSubValue_ }}
-                                                                                                    </p>
+                                                                                                        <p class="data_point">
+                                                                                                            <strong>{{ ucfirst(str_replace('_', ' ', $subSubKey_)) }}
+                                                                                                                :</strong> {{ $subSubValue_ }}
+                                                                                                        </p>
                                                                                                     @endif
                                                                                                 @endforeach
 
                                                                                             </div>
                                                                                         @else
 
-
-                                                                                        <p class="data_point">
-                                                                                            <strong>{{ ucfirst(str_replace('_', ' ', $subSubKey)) }}
-                                                                                                :</strong> {{ $subSubValue }}
-                                                                                        </p>
+                                                                                            <p class="data_point">
+                                                                                                <strong>{{ ucfirst(str_replace('_', ' ', $subSubKey)) }}
+                                                                                                    :</strong> {{ $subSubValue }}
+                                                                                            </p>
                                                                                         @endif
 
                                                                                     @endforeach
@@ -268,10 +275,9 @@
                                     </div>
                                 @endif
                             @endforeach
-                        </div>
-                    @endif
 
-
+                        @endif
+                    </div>
 
 
                     @if($balance_impact)
@@ -293,7 +299,6 @@
     </div>
 
 
-
     <div class="flex items-center flex-wrap justify-between mb-5 mt-5">
         <div class="mb-20">
             <h4>Results</h4>
@@ -301,71 +306,67 @@
         </div>
     </div>
 
-        {{--<div class="flex items-center justify-between gap10 flex-wrap mb-20">
-            <div class="wg-filter flex-grow">
-                <form class="form-search bg-white">
-                    <fieldset class="name">
-                        <input spellcheck="false" type="text" wire:model.live="search" id="search"
-                               placeholder="Search" class="bg-white"
-                               name="name" tabindex="2" value="" aria-required="true" required="">
-                    </fieldset>
-                    <div class="button-submit">
-                        <button class="" type="submit"><i class="icon-search"></i></button>
-                    </div>
-                </form>
-            </div>
-        </div>--}}
+    {{--<div class="flex items-center justify-between gap10 flex-wrap mb-20">
+        <div class="wg-filter flex-grow">
+            <form class="form-search bg-white">
+                <fieldset class="name">
+                    <input spellcheck="false" type="text" wire:model.live="search" id="search"
+                           placeholder="Search" class="bg-white"
+                           name="name" tabindex="2" value="" aria-required="true" required="">
+                </fieldset>
+                <div class="button-submit">
+                    <button class="" type="submit"><i class="icon-search"></i></button>
+                </div>
+            </form>
+        </div>
+    </div>--}}
 
 
-        @if(count($listing))
+    @if(count($listing))
         <div class="wg-box">
-        <div class="table-wrapper">
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>KYC Type</th>
-                    <th>Search</th>
-                    <th>Channel</th>
-                    <th>Timestamp</th>
-                    <th>Tracking ID</th>
-                </tr>
-                </thead>
-                <tbody>
-
-                @foreach($listing as $list_item)
+            <div class="table-wrapper">
+                <table class="table">
+                    <thead>
                     <tr>
-                        <td>{{strtoupper($list_item->search_type)}}</td>
-                        <td>{{$list_item->search_param}}</td>
-                        <td>{{ucwords($list_item->channel)}}
-                            <small class="d-block">{{$list_item->user->name}}</small>
-                        </td>
-                        <td>{{$list_item->created_at_human}}</td>
-                        <td>{{$list_item->search_uuid}}</td>
-
+                        <th>KYC Type</th>
+                        <th>Search</th>
+                        <th>Channel</th>
+                        <th>Timestamp</th>
+                        <th>Tracking ID</th>
                     </tr>
-                @endforeach
+                    </thead>
+                    <tbody>
+
+                    @foreach($listing as $list_item)
+                        <tr>
+                            <td>{{strtoupper($list_item->search_type)}}</td>
+                            <td>{{$list_item->search_param}}</td>
+                            <td>{{ucwords($list_item->channel)}}
+                                <small class="d-block">{{$list_item->user->name}}</small>
+                            </td>
+                            <td>{{$list_item->created_at_human}}</td>
+                            <td>{{$list_item->search_uuid}}</td>
+
+                        </tr>
+                    @endforeach
 
 
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
 
-            {{ $listing->links('vendor.pagination.bootstrap-5') }}
+                {{ $listing->links('vendor.pagination.bootstrap-5') }}
+            </div>
+
+
         </div>
 
-
-
-
-    </div>
-
-        @else
-
+    @else
 
         <div class="block-warning type-custom w-full fs-4 my-3">
             No records found
         </div>
 
-        @endif
-
+    @endif
 
 
     <script>
