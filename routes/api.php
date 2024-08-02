@@ -23,6 +23,7 @@ Route::middleware('auth:sanctum')->prefix('v1')->middleware(ApiAuthMiddleware::c
     Route::post('krapin', [ApiController::class, 'krapin'])->name('KRA Pin');
     Route::post('business', [ApiController::class, 'business'])->name('Business');
     Route::post('plate', [ApiController::class, 'vehicleplate'])->name('Vehicle');
+    Route::post('collateral', [ApiController::class, 'collateral'])->name('Collateral');
     //Route::any('phone', [ApiController::class, 'phone'])->name('phone');
     Route::get('banklist', [ApiController::class, 'banks'])->name('Banks');
     Route::post('bank', [ApiController::class, 'bank'])->name('Bank Account');

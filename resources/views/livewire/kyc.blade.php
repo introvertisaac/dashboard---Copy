@@ -33,7 +33,7 @@
                     <div class="modal-content">
 
                         <div class="modal-header">
-                            <h6>{{$method['input_label']}} Verification</h6>
+                            <h6>{{$method['label']}} Verification</h6>
                             <button type="button" class="btn-close text-reset" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
                         </div>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\BankAccountRequest;
 use App\Http\Requests\BusinessRequest;
+use App\Http\Requests\CollateralRequest;
 use App\Http\Requests\IdRequest;
 use App\Http\Requests\KrapinRequest;
 use App\Http\Requests\PhoneRequest;
@@ -435,5 +436,48 @@ class ApiController extends Controller
         ]);
 
     }
+
+
+    /**
+     * Collateral
+     *
+     * Returns the details associated with an MPSR item verifying if it's in use as collateral. Example of serial no include vehicle chassis number
+     *
+     * @response array{success:true,response_code:200,message:"Collateral Check Fetched Successfully",data:array{},request_id:"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"}
+     *
+     */
+    public function collateral(CollateralRequest $request)
+    {
+        $serialno = $request->get('serialno');
+
+        $transaction = Search::newSearch($request->user(), 'collateral', $serialno);
+
+
+        if ($transaction) {
+
+            $call_response = check_call('collateral', $serialno);
+
+            if (is_array($call_response)) {
+
+                $transaction->update([
+                    'response' => $call_response
+                ]);
+
+                return response()->json([
+                    'success' => true,
+                    'response_code' => 200,
+                    'message' => 'Collateral Check Fetched Successfully',
+                    'data' => $call_response,
+                    'request_id' => $transaction->search_uuid
+                ]);
+
+            }
+
+        }
+
+        return $this->low_balance_response();
+
+    }
+
 
 }
