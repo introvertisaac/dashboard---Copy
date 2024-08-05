@@ -32,12 +32,11 @@
     <div class="wg-box">
 
         <div class="table-wrapper">
-            <table class="table">
+            <table class="table table-responsive">
                 <thead>
                 <tr>
-                    <th>Customer Name</th>
-                    <th>Phone Number</th>
-                    <th>Primary Email</th>
+                    <th class="w-25">Customer Name</th>
+                    <th class="w-25">Email</th>
                     <th>Balance</th>
                     <th>Number of APIs</th>
                     <th></th>
@@ -50,13 +49,13 @@
                 @foreach($customers as $customer)
                     <tr>
                         <td>{{$customer->name}}</td>
-                        <td>{{$customer->phone}}</td>
                         <td>{{$customer->primary_email}}</td>
                         <td>{{$customer->balance_label}}</td>
                         <td>{{$customer->api_count}}</td>
                         <td><a class="" wire:click="edit('{{$customer->uuid}}')">Manage</a></td>
                         <td><a class="" wire:click="allocate('{{$customer->uuid}}')">Allocate Credit</a></td>
-                        <td><a target="_blank" href="{{route('dashboard.customer',['customer_uuid'=>$customer->uuid])}}">View
+                        <td><a target="_blank"
+                               href="{{route('dashboard.customer',['customer_uuid'=>$customer->uuid])}}">View
                                 Dashboard</a></td>
                     </tr>
                 @endforeach
