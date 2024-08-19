@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Customer;
 use App\Models\Search;
+use App\Models\User;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Spatie\Activitylog\Models\Activity;
+use function Pest\Laravel\get;
 
 class DashboardController extends Controller
 {
@@ -28,11 +31,14 @@ class DashboardController extends Controller
 
         $searches_count = Search::where('customer_id', $customer->id)->count();
 
-        $activities = $customer->users()->first()->actions()->latest()->take(4)->get();
+        $customer_users = $customer->users()->get()->pluck('id')->toArray();
+
+        $activities = Activity::whereIn('causer_id', $customer_users)->where('causer_type', User::class)->latest()->take(5)->get();
+
 
         $api_group_counts = Search::where('customer_id', $customer->id)->selectRaw('search_type, count(*) as count')
             ->groupBy('search_type')
-            ->orderBy('count','DESC')
+            ->orderBy('count', 'DESC')
             ->get();
 
         $search_chart = Search::where('customer_id', $customer->id)->select([
@@ -57,7 +63,7 @@ class DashboardController extends Controller
 
         $chart_values = implode(',', $values);
 
-        return view('dashboard', compact('chart_values','chart_keys','api_group_counts','customer','service_count', 'customer_users_count', 'customer_uuid', 'activities', 'balance', 'searches_count', 'searches_count_today', 'searches_count_month', 'searches_count_year'));
+        return view('dashboard', compact('chart_values', 'chart_keys', 'api_group_counts', 'customer', 'service_count', 'customer_users_count', 'customer_uuid', 'activities', 'balance', 'searches_count', 'searches_count_today', 'searches_count_month', 'searches_count_year'));
     }
 
 }

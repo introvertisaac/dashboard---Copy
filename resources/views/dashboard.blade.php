@@ -248,7 +248,6 @@
         </div>
 
 
-        @if (!$customer_uuid)
 
             <div class="wg-box">
                 <div class="flex items-center justify-between">
@@ -289,7 +288,7 @@
                 </div>
             </div>
 
-        @endif
+
 
     </div>
 
