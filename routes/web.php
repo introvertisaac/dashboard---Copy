@@ -2,10 +2,13 @@
 
 use App\Http\Controllers\CheckController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\CustomerTransactionController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GuestController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UserController;
+use App\Livewire\PasswordReset;
+use App\Livewire\PasswordResetForm;
 use Illuminate\Support\Facades\Route;
 
 
@@ -14,6 +17,9 @@ Route::get('', [GuestController::class, 'index'])->name('index');
 Route::get('login', [GuestController::class, 'login'])->name('login');
 Route::post('login', [GuestController::class, 'loginProcess']);
 
+Route::get('password/reset', PasswordReset::class)->name('password.request');
+
+Route::get('/password/reset/{token}', PasswordResetForm::class)->name('password.reset');
 
 Route::middleware('auth')->group(callback: function () {
 
@@ -23,6 +29,7 @@ Route::middleware('auth')->group(callback: function () {
     Route::get('settings', [SettingController::class, 'index'])->name('settings');
     Route::get('users', [UserController::class, 'index'])->name('users');
     Route::get('checks', [CheckController::class, 'index'])->name('checks');
+    Route::get('customer-transactions', [CustomerTransactionController::class, 'index'])->name('customer.transactions');
 
 });
 

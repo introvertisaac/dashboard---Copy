@@ -15,7 +15,12 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+
+Route::any('/', [ApiController::class, 'ping']);
+
 Route::middleware('auth:sanctum')->prefix('v1')->middleware(ApiAuthMiddleware::class)->group(function () {
+
+    Route::any('/', [ApiController::class, 'ping']);
 
     Route::post('id', [ApiController::class, 'id'])->name('National ID');
     Route::post('alienid', [ApiController::class, 'alienid'])->name('Alien ID');

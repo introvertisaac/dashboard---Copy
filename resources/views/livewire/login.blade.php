@@ -27,7 +27,7 @@
             @error('password') <span class="error text-danger d-block">{{ $message }}</span> @enderror
         </fieldset>
         <div class="flex justify-end items-end my-1">
-            <span class="body-text bold">Forgot password? </span> <a href="#" class="body-text bold tf-color ml-6">
+            <span class="body-text bold">Forgot password? </span> <a href="{{route('password.request')}}" class="body-text bold tf-color ml-6">
                 Reset Password</a>
         </div>
         <div class="flex justify-center mt-10">

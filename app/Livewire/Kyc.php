@@ -7,6 +7,7 @@ use App\Models\Search;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Livewire\Component;
 
 class Kyc extends Component
@@ -45,7 +46,7 @@ class Kyc extends Component
 
         $transaction = Search::newSearch(user(), $this->check_type, $query_value, null, 'portal');
 
-        if ($transaction) {
+        if ($transaction instanceof Search) {
 
             $call_response = check_call($this->check_type, $query_value);
 
@@ -62,9 +63,13 @@ class Kyc extends Component
             #Log::info($this->check_type, ['query' => $this->check_number, 'response' => $this->check_result]);
         } else {
 
-            $this->check_result = [
-                'Unable to perform search' => ['Reason' => 'Low credit']
-            ];
+            if(is_array($transaction) && Arr::get($transaction,'error')){
+
+                $this->check_result = [
+                    'Unable to perform search' => ['Reason' => Arr::get($transaction,'error.message','Unable to complete request')]
+                ];
+
+            }
         }
 
 

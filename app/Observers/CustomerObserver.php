@@ -15,6 +15,7 @@ class CustomerObserver
     public function created(Customer $customer): void
     {
         //
+        $customer->generateParentLevels();
 
         $wallet = $customer->createWallet([
             'name' => config('wallet.wallet.default.name'),
@@ -33,6 +34,7 @@ class CustomerObserver
 
         //$wallet->deposit(config('billing.free_wallet_amount'));
 
+
     }
 
     /**
@@ -42,6 +44,8 @@ class CustomerObserver
     {
         //
         $customer->api_count = $this->compute_api_count($customer);
+
+
 
     }
 

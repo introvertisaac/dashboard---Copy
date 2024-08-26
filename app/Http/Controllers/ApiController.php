@@ -32,7 +32,7 @@ class ApiController extends Controller
 
         $transaction = Search::newSearch($request->user(), 'national_id', $idnumber);
 
-        if ($transaction) {
+        if ($transaction instanceof Search) {
 
             $call_response = check_call('national_id', $idnumber);
 
@@ -50,7 +50,7 @@ class ApiController extends Controller
                     'request_id' => $transaction->search_uuid
                 ]);
 
-            }else{
+            } else {
 
                 $transaction->update([
                     'response' => $call_response
@@ -67,10 +67,9 @@ class ApiController extends Controller
             }
 
 
-
         }
 
-        return $this->low_balance_response();
+        return $this->error_handle($transaction);
 
     }
 
@@ -90,7 +89,7 @@ class ApiController extends Controller
         $transaction = Search::newSearch($request->user(), 'alien_id', $idnumber);
 
 
-        if ($transaction) {
+        if ($transaction instanceof Search) {
 
             $call_response = check_call('alien_id', $idnumber);
 
@@ -108,7 +107,7 @@ class ApiController extends Controller
                     'request_id' => $transaction->search_uuid
                 ]);
 
-            }else{
+            } else {
 
                 $transaction->update([
                     'response' => $call_response
@@ -126,8 +125,7 @@ class ApiController extends Controller
 
         }
 
-        return $this->low_balance_response();
-
+        return $this->error_handle($transaction);
     }
 
     /**
@@ -145,7 +143,7 @@ class ApiController extends Controller
         $transaction = Search::newSearch($request->user(), 'kra', $idnumber);
 
 
-        if ($transaction) {
+        if ($transaction instanceof Search) {
 
             $call_response = check_call('kra', $idnumber);
 
@@ -163,7 +161,7 @@ class ApiController extends Controller
                     'request_id' => $transaction->search_uuid
                 ]);
 
-            }else{
+            } else {
 
                 $transaction->update([
                     'response' => $call_response
@@ -181,8 +179,32 @@ class ApiController extends Controller
 
         }
 
-        return $this->low_balance_response();
 
+        return $this->error_handle($transaction);
+
+    }
+
+
+    public function error_handle($transaction): \Illuminate\Http\JsonResponse
+    {
+
+        if (is_array($transaction) && Arr::get($transaction, 'error')) {
+            return response()->json([
+                'success' => false,
+                'response_code' => Arr::get($transaction, 'error.response_code', 402),
+                'message' => Arr::get($transaction, 'error.message', 'Unable to complete request'),
+                'data' => [],
+                'request_id' => Str::uuid()
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'response_code' => 400,
+            'message' => 'Unable to complete request',
+            'data' => [],
+            'request_id' => Str::uuid()
+        ]);
     }
 
 
@@ -202,7 +224,7 @@ class ApiController extends Controller
         $transaction = Search::newSearch($request->user(), 'dl', $idnumber);
 
 
-        if ($transaction) {
+        if ($transaction instanceof Search) {
 
             $call_response = check_call('dl', $idnumber);
             if (is_array($call_response)) {
@@ -219,7 +241,7 @@ class ApiController extends Controller
                     'request_id' => $transaction->search_uuid
                 ]);
 
-            }else{
+            } else {
 
                 $transaction->update([
                     'response' => $call_response
@@ -237,7 +259,7 @@ class ApiController extends Controller
 
         }
 
-        return $this->low_balance_response();
+        return $this->error_handle($transaction);
 
     }
 
@@ -259,7 +281,7 @@ class ApiController extends Controller
 
         $transaction = Search::newSearch($request->user(), 'bank', $bank_account);
 
-        if ($transaction) {
+        if ($transaction instanceof Search) {
 
 
             $call_response = check_call('bank', $bank_account);
@@ -298,7 +320,7 @@ class ApiController extends Controller
 
         }
 
-        return $this->low_balance_response();
+        return $this->error_handle($transaction);
 
     }
 
@@ -318,7 +340,7 @@ class ApiController extends Controller
         $transaction = Search::newSearch($request->user(), 'plate', $plate);
 
 
-        if ($transaction) {
+        if ($transaction instanceof Search) {
 
             $call_response = check_call('plate', $plate);
 
@@ -336,7 +358,7 @@ class ApiController extends Controller
                     'request_id' => $transaction->search_uuid
                 ]);
 
-            }else{
+            } else {
 
                 $transaction->update([
                     'response' => $call_response
@@ -354,7 +376,7 @@ class ApiController extends Controller
 
         }
 
-        return $this->low_balance_response();
+        return $this->error_handle($transaction);
 
     }
 
@@ -386,7 +408,7 @@ class ApiController extends Controller
 
         $transaction = Search::newSearch($request->user(), 'brs', $businessnumber);
 
-        if ($transaction) {
+        if ($transaction instanceof Search) {
 
             $call_response = check_call('brs', $businessnumber);
 
@@ -406,7 +428,7 @@ class ApiController extends Controller
                     'request_id' => $transaction->search_uuid
                 ]);
 
-            }else{
+            } else {
 
                 $transaction->update([
                     'response' => $call_response
@@ -424,7 +446,7 @@ class ApiController extends Controller
 
         }
 
-        return $this->low_balance_response();
+        return $this->error_handle($transaction);
 
     }
 
@@ -539,7 +561,7 @@ class ApiController extends Controller
         $transaction = Search::newSearch($request->user(), 'collateral', $serialno);
 
 
-        if ($transaction) {
+        if ($transaction instanceof Search) {
 
             $call_response = check_call('collateral', $serialno);
 
@@ -557,7 +579,7 @@ class ApiController extends Controller
                     'request_id' => $transaction->search_uuid
                 ]);
 
-            }else{
+            } else {
 
                 $transaction->update([
                     'response' => $call_response
@@ -575,7 +597,18 @@ class ApiController extends Controller
 
         }
 
-        return $this->low_balance_response();
+        return $this->error_handle($transaction);
+
+    }
+
+    public function ping(Request $request)
+    {
+        return response()->json([
+            'success' => true,
+            'response_code' => 200,
+            'message' => 'API service running okay',
+            'request_ip' => $request->ip(),
+        ]);
 
     }
 

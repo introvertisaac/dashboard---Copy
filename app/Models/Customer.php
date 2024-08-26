@@ -22,6 +22,9 @@ class Customer extends Model implements Wallet
 
     protected $guarded = [];
 
+    public const DISABLED = 'disabled';
+    public const ACTIVE = 'active';
+
     public function getTotalDepositsAttribute()
     {
         return Transaction::select('amount')->where('payable_id', $this->id)->where('type', 'deposit')
@@ -60,6 +63,11 @@ class Customer extends Model implements Wallet
         return is_string($value) ? json_decode($value) : $value;
     }
 
+    public function getParentLevelsAttribute($value)
+    {
+        return is_string($value) ? json_decode($value) : [];
+    }
+
 
     public function getRouteKeyName()
     {
@@ -75,6 +83,13 @@ class Customer extends Model implements Wallet
     {
         return $this->belongsTo(Customer::class, 'parent_customer_id');
     }
+
+    public function children()
+    {
+        return $this->hasMany(Customer::class, 'parent_customer_id');
+    }
+
+
 
 
     public static function findByUuid($uuid)
@@ -128,6 +143,25 @@ class Customer extends Model implements Wallet
     public function getBalanceLabelAttribute()
     {
         return 'KES ' . number_format($this->balance);
+    }
+
+    public function generateParentLevels()
+    {
+        $parents = [];
+        $customer = $this;
+        while ($customer && $customer->parent) {
+            $customer = $customer->parent;
+            $parents[] = [
+                'id' => $customer->id,
+                'name' => $customer->name,
+                'wallet_id' => $customer->wallet->id
+            ];
+        }
+
+        $this->update([
+            'parent_levels' => $parents
+        ]);
+
     }
 
 

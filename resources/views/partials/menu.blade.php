@@ -55,6 +55,34 @@
                 @endcanany
 
 
+                <li class="menu-item has-children">
+                    <a href="javascript:void(0);" class="menu-item-button">
+                        <div class="icon"><i class="icon-bar-chart-2"></i></div>
+                        <div class="text">Reports</div>
+                    </a>
+                    <ul class="sub-menu">
+                        <li class="sub-menu-item">
+                            <a href="{{route('customer.transactions')}}" class="">
+                                <div class="text">Customer Transactions</div>
+                            </a>
+                        </li>
+                      {{--  <li class="sub-menu-item">
+                            <a href="#" class="">
+                                <div class="text">Revenue Report</div>
+                            </a>
+                        </li>
+
+                        <li class="sub-menu-item">
+                            <a href="#" class="">
+                                <div class="text">Topup History</div>
+                            </a>
+                        </li>--}}
+                    </ul>
+                </li>
+
+
+
+
                 <li class="menu-item spacer" style="flex-grow: 1;"></li> <!-- Spacer to push items to bottom -->
 
                 <li class="menu-item menu_settings">

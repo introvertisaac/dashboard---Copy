@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Customer;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
@@ -28,6 +29,13 @@ class Login extends Component
         if (Auth::attempt($credentials)) {
             $user = user();
             $customer = $user->customer;
+
+            if ($customer->status != Customer::ACTIVE) {
+                session()->flash('error', 'Customer Account Disabled');
+                logout_all_guards();
+                return false;
+            }
+
             set_customer_session($customer);
 
             trail('login-success', 'Logged in Successfully');
