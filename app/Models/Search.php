@@ -299,6 +299,7 @@ class Search extends Model
 
                 $level_cost = optional(optional($level_parent)->charges)->$type_key;
                 $selling_price = ($level_cost) ?: $_wholesale;
+                $selling_price = intval($selling_price);
 
                 $sold_price = end($selling_prices);
                 $selling_prices[] = $level_cost;
