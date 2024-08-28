@@ -2,11 +2,11 @@
 
 namespace App\Livewire;
 
+use Illuminate\Support\Carbon;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Ledger;
 
-// Assuming the Ledger model is correctly set up
 use Illuminate\Support\Facades\Session;
 
 class CustomerTransactions extends Component
@@ -15,7 +15,7 @@ class CustomerTransactions extends Component
 
     public $startDate;
     public $endDate;
-    public $customers; // For filtering customers belonging to the logged-in user
+    public $customers;
     public $selectedCustomerId;
     public $selectedService;
     public $services;
@@ -23,26 +23,26 @@ class CustomerTransactions extends Component
     public $totalRevenue;
     public $totalExpense;
     public $profit;
-    public $filteredTransactions; // Store filtered transactions
+    public $filteredTransactions;
     protected $paginationTheme = 'bootstrap';
 
     public function mount()
     {
-// Assuming you have a way to fetch customer IDs belonging to the logged-in user
+
         $this->customers = user()->customer->children;
         $this->services = config('billing.services');
     }
 
     public function updatedSelectedCustomerId()
     {
-// Reset pagination when filters are applied
+
         $this->resetPage();
     }
 
 
     public function filterTransactions()
     {
-        $this->resetPage(); // Reset pagination when filtering
+        $this->resetPage();
     }
 
 
@@ -53,12 +53,15 @@ class CustomerTransactions extends Component
 
         $query = Ledger::where('customer_id', $customer_id);
 
-        // Apply date filters if selected
+
         if ($this->startDate && $this->endDate) {
-            $query->whereBetween('dated', [$this->startDate, $this->endDate]);
+
+            $startDate = Carbon::parse($this->startDate)->startOfDay();
+            $endDate = Carbon::parse($this->endDate)->endOfDay();
+
+            $query->whereBetween('dated', [$startDate, $endDate]);
         }
 
-        // Apply customer filter if selected
         if ($this->selectedCustomerId) {
             $query->where('initiating_customer_id', $this->selectedCustomerId)->where('customer_id', $customer_id);
         }
@@ -73,7 +76,6 @@ class CustomerTransactions extends Component
         $this->profit = $this->totalRevenue - $this->totalExpense;
 
 
-        // Paginate the result
         $transactions = $query->orderBy('dated', 'desc')->paginate(10);
 
         return view('livewire.customer-transactions', [
