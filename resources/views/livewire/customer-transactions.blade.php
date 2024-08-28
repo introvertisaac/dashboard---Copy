@@ -81,6 +81,35 @@
         </form>
 
 
+
+        <div class="row mb-4 card-body">
+            <div class="col-md-4">
+                <div class="card mb-3" style="background-color: #E6F3FF;">
+                    <div class="card-header">Total Revenue (based on Selling Price)</div>
+                    <div class="card-body">
+                        <h5 class="card-title">KSh {{ number_format($totalRevenue, 2) }}</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card mb-3" style="background-color: #FFEBE6;">
+                    <div class="card-header">Total Expense (based on Buying Price)</div>
+                    <div class="card-body">
+                        <h5 class="card-title">KSh {{ number_format($totalExpense, 2) }}</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card mb-3" style="background-color: #E8FFE6;">
+                    <div class="card-header">Total Profit</div>
+                    <div class="card-body">
+                        <h5 class="card-title">KSh {{ number_format($profit, 2) }}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         @if($transactions->isEmpty())
             <p>No transactions found for the filter parameters</p>
         @else

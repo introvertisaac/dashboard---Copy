@@ -19,6 +19,10 @@ class CustomerTransactions extends Component
     public $selectedCustomerId;
     public $selectedService;
     public $services;
+
+    public $totalRevenue;
+    public $totalExpense;
+    public $profit;
     public $filteredTransactions; // Store filtered transactions
     protected $paginationTheme = 'bootstrap';
 
@@ -41,6 +45,8 @@ class CustomerTransactions extends Component
         $this->resetPage(); // Reset pagination when filtering
     }
 
+
+
     public function render()
     {
         $customer_id = customer()->id;
@@ -60,6 +66,12 @@ class CustomerTransactions extends Component
         if ($this->selectedService) {
             $query->where('service', $this->selectedService);
         }
+
+
+        $this->totalRevenue = $query->sum('selling_price');
+        $this->totalExpense = $query->sum('buying_price');
+        $this->profit = $this->totalRevenue - $this->totalExpense;
+
 
         // Paginate the result
         $transactions = $query->orderBy('dated', 'desc')->paginate(10);
