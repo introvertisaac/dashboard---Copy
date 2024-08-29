@@ -28,7 +28,6 @@ class CustomerTransactions extends Component
 
     public function mount()
     {
-
         $this->customers = user()->customer->children;
         $this->services = config('billing.services');
     }
