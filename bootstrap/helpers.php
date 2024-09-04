@@ -712,7 +712,7 @@ function check_call($check, $query, $extra_params = [])
           'brs'];
     */
 
-
+    $query = base64_encode($query);
     $url = "$base_url/$check/$query";
 
     $response = Http::withHeaders($headers)->get($url);
