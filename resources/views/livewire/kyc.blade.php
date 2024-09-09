@@ -332,7 +332,7 @@
                         <th>Search</th>
                         <th>Channel</th>
                         <th>Timestamp</th>
-                        <th>View</th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>

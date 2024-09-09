@@ -97,7 +97,7 @@ class Kyc extends Component
         $this->check_type = $search->search_type;
         $this->check_type_label = service_label($search->search_type);
         $this->balance_impact = ['Balance Before' => optional($search)->balance_before, 'Balance After' => optional($search)->balance_after];
-        
+
     }
 
 
