@@ -12,6 +12,7 @@ use Bavix\Wallet\Models\Wallet;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -360,6 +361,11 @@ class Search extends Model
             'ledgered_at' => now()
         ]);
 
+    }
+
+    public function getIsOlderThan24HoursAttribute()
+    {
+        return $this->created_at->lt(Carbon::now()->subDay());
     }
 
 

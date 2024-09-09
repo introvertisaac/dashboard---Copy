@@ -332,20 +332,29 @@
                         <th>Search</th>
                         <th>Channel</th>
                         <th>Timestamp</th>
-                        <th>Tracking ID</th>
+                        <th>View</th>
                     </tr>
                     </thead>
                     <tbody>
 
                     @foreach($listing as $list_item)
                         <tr>
-                            <td>{{strtoupper($list_item->search_type)}}</td>
+                            <td title="TrackingID: {{$list_item->search_uuid}}">{{strtoupper($list_item->search_type)}}</td>
                             <td>{{$list_item->search_param}}</td>
                             <td>{{ucwords($list_item->channel)}}
                                 <small class="d-block">{{$list_item->user->name}}</small>
                             </td>
                             <td>{{$list_item->created_at_human}}</td>
-                            <td>{{$list_item->search_uuid}}</td>
+                            <td>
+                                @if ($list_item->is_older_than_24_hours)
+
+                                @else
+                                    <a class="" wire:click="view('{{$list_item->search_uuid}}')">View</a>
+                                @endif
+
+
+
+                            </td>
 
                         </tr>
                     @endforeach

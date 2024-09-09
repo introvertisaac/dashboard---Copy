@@ -63,10 +63,10 @@ class Kyc extends Component
             #Log::info($this->check_type, ['query' => $this->check_number, 'response' => $this->check_result]);
         } else {
 
-            if(is_array($transaction) && Arr::get($transaction,'error')){
+            if (is_array($transaction) && Arr::get($transaction, 'error')) {
 
                 $this->check_result = [
-                    'Unable to perform search' => ['Reason' => Arr::get($transaction,'error.message','Unable to complete request')]
+                    'Unable to perform search' => ['Reason' => Arr::get($transaction, 'error.message', 'Unable to complete request')]
                 ];
 
             }
@@ -84,6 +84,20 @@ class Kyc extends Component
     public function closeModal()
     {
         $this->dispatch('closeResultModal');
+    }
+
+
+    public function view($uuid)
+    {
+        $this->reset();
+        $search = Search::where('customer_id', \customer()->id)->where('search_uuid', $uuid)->first();
+        $this->openModal();
+        $this->check_number = $search->search_param;
+        $this->check_result = json_decode(json_encode($search->response), true);
+        $this->check_type = $search->search_type;
+        $this->check_type_label = service_label($search->search_type);
+        $this->balance_impact = ['Balance Before' => optional($search)->balance_before, 'Balance After' => optional($search)->balance_after];
+        
     }
 
 
