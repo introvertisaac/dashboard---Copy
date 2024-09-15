@@ -43,6 +43,7 @@ class Kyc extends Component
         $this->openModal();
 
         $query_value = $this->bank ? $this->bank . '-' . $this->check_number : $this->check_number;
+        $query_value = removeAllSpaces($query_value); //solve spaced number plate
 
         $transaction = Search::newSearch(user(), $this->check_type, $query_value, null, 'portal');
 
@@ -97,6 +98,7 @@ class Kyc extends Component
         $this->check_type = $search->search_type;
         $this->check_type_label = service_label($search->search_type);
         $this->balance_impact = ['Balance Before' => optional($search)->balance_before, 'Balance After' => optional($search)->balance_after];
+
 
     }
 
