@@ -18,8 +18,7 @@ Route::get('login', [GuestController::class, 'login'])->name('login');
 Route::post('login', [GuestController::class, 'loginProcess']);
 
 Route::get('password/reset', PasswordReset::class)->name('password.request');
-
-Route::get('/password/reset/{token}', PasswordResetForm::class)->name('password.reset');
+Route::get('/password/reset/{token}/{username}', PasswordResetForm::class)->name('password.reset');
 
 Route::middleware('auth')->group(callback: function () {
 
