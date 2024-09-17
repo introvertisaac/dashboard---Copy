@@ -703,6 +703,7 @@ function check_call($check, $query, $extra_params = [])
     ];
 
 
+
     /*  $allowed_types = ['
           national_id',
           'alien_id',
@@ -716,7 +717,6 @@ function check_call($check, $query, $extra_params = [])
     $url = "$base_url/$check/$query";
 
     $response = Http::withHeaders($headers)->get($url);
-
     if ($response->status()) {
 
         return $response->json();

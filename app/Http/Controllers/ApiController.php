@@ -416,6 +416,12 @@ class ApiController extends Controller
 
                 $records = Arr::get($call_response, 'records.0');
 
+                if(is_null($records)){
+
+                    $records =  $call_response;
+                }
+
+
                 $transaction->update([
                     'response' => $records
                 ]);
