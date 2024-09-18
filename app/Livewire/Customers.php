@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Customer;
+use Bavix\Wallet\Models\Transfer;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -15,6 +16,7 @@ class Customers extends Component
     public $search = '';
 
     public $customer_uuid;
+    public $customer_receiver_uuid;
     public $customer;
     public $page_view;
     public $primary_email;
@@ -25,6 +27,8 @@ class Customers extends Component
     public $is_reseller;
 
     public $amount;
+    public $transfer_amount;
+    public $my_customers = [];
     public $narration;
     protected $paginationTheme = 'bootstrap';
     /**
@@ -109,12 +113,77 @@ class Customers extends Component
 
         $customer->wallet->deposit($amount, ['narration' => $narration, 'ip' => ip(), 'user_id' => user('id'), 'customer_id' => $this->customer->id]);
 
-        trail('customer-created', "Credit topup of $amount for " . $customer_name, $customer);
+        trail('credit-topup', "Credit topup of $amount for " . $customer_name, $customer);
 
         session()->flash('message', "Credit allocated successfully to $customer_name New balance: " . $customer->balance_label);
 
         $this->list();
     }
+
+    public function transfer($uuid)
+    {
+        try {
+            $customer = Customer::findByUuid($uuid);
+            if (!$customer) {
+                session()->flash('error', 'Customer not found');
+            } else {
+                $customers = Customer::where('id', '!=', $customer->id)->mine()->order()->get();
+                $this->my_customers = $customers;
+
+                $this->transfer_amount = $customer->balance;
+
+                $this->customer_uuid = $uuid;
+                $this->customer = $customer;
+                $this->page_view = 'transfer-credit';
+            }
+        } catch (\Exception $ex) {
+            session()->flash('error', 'Something went wrong ');
+        }
+
+
+    }
+
+    public function credit_transfer()
+    {
+        $customer = Customer::findByUuid($this->customer_uuid);
+
+        $customer_receiver = Customer::findByUuid($this->customer_receiver_uuid);
+        $customer_receiver_wallet = $customer_receiver->wallet;
+        $amount = $this->transfer_amount;
+        $narration = $this->narration;
+        $customer_name = $customer_receiver->name;
+
+
+
+        try {
+            $transfer = $customer->wallet->transfer($customer_receiver_wallet, $amount, ['narration' => $narration, 'ip' => ip(), 'user_id' => user('id'), 'customer_id' => $this->customer->id]);
+
+            if ($transfer instanceof Transfer) {
+                trail('credit-transfer', "Credit topup of $amount to " . $customer_name, $customer);
+
+                session()->flash('message', "Credit transferred successfully to $customer_name New balance: " . $customer_receiver->balance_label);
+
+                $this->list();
+            } else {
+                session()->flash('message', "Credit transferred failed");
+            }
+
+        } catch (\Bavix\Wallet\Exceptions\InsufficientFunds $e) {
+
+            session()->flash('message', "Credit transferred failed due to Insufficient funds for this transfer.");
+
+        } catch (\Exception $e) {
+            // Catch any other exception and log it for debugging
+            session()->flash('message', "An error occurred while processing the transfer. Please try again.");
+
+        }
+
+
+
+
+
+    }
+
 
 
     public function new_customer()

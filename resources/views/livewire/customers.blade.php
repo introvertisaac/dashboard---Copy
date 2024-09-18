@@ -40,8 +40,6 @@
                     <th>Balance</th>
                     <th>Number of APIs</th>
                     <th></th>
-                    <th></th>
-                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -52,11 +50,23 @@
                         <td>{{$customer->primary_email}}</td>
                         <td>{{$customer->balance_label}}</td>
                         <td>{{$customer->api_count}}</td>
-                        <td><a class="" wire:click="edit('{{$customer->uuid}}')">Manage</a></td>
-                        <td><a class="" wire:click="allocate('{{$customer->uuid}}')">Allocate Credit</a></td>
-                        <td><a target="_blank"
-                               href="{{route('dashboard.customer',['customer_uuid'=>$customer->uuid])}}">View
-                                Dashboard</a></td>
+
+                        <td>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-primary">Actions</button>
+                                <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class="visually-hidden">Toggle Dropdown</span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" wire:click="edit('{{$customer->uuid}}')">Manage</a></li>
+                                    <li><a class="dropdown-item" wire:click="allocate('{{$customer->uuid}}')">Allocate Credit</a></li>
+                                    <li><a class="dropdown-item" wire:click="transfer('{{$customer->uuid}}')">Transfer Credits</a></li>
+                                    <li><a class="dropdown-item" href="{{route('dashboard.customer',['customer_uuid'=>$customer->uuid])}}">View Dashboard</a></li>
+                                </ul>
+                            </div>
+
+                        </td>
+
                     </tr>
                 @endforeach
 
