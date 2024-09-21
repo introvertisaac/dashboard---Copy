@@ -72,9 +72,8 @@ class Users extends Component
 
         if ($this->page_view) {
 
-
-            $customers = Customer::mine()->order()->get();
-
+            $customer_id = \customer()->id;
+            $customers = Customer::mine()->orWhere('id',$customer_id)->order()->get();
 
             if ($this->user) {
                 $user = $this->user;
@@ -111,8 +110,7 @@ class Users extends Component
     public function new_user()
     {
         $this->validate();
-
-        $customer = Customer::where('uuid', $this->customer_id)->mine()->firstOrFail();
+        $customer = Customer::where('uuid', $this->customer_id)->mine()->orWhere('id',\customer()->id)->firstOrFail();
 
         $password = str_shuffle(Str::password(10, true, true, false) . '@+');
 
