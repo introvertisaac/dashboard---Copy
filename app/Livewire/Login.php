@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Customer;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
@@ -32,6 +33,12 @@ class Login extends Component
 
             if ($customer->status != Customer::ACTIVE) {
                 session()->flash('error', 'Customer Account Disabled');
+                logout_all_guards();
+                return false;
+            }
+
+            if ($user->status != User::ACTIVE) {
+                session()->flash('error', 'Your user account is currently disabled');
                 logout_all_guards();
                 return false;
             }

@@ -4,7 +4,10 @@ namespace App\Livewire;
 
 use App\Models\Customer;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -24,11 +27,13 @@ class Users extends Component
     public $username;
     public $customer_id;
     public $phone;
+    public $status;
 
     protected $rules = [
         'username' => 'required|email',
         'name' => 'required',
         'customer_id' => 'required',
+        'status' => 'required|in:active,suspended',
     ];
 
     public function create()
@@ -73,7 +78,7 @@ class Users extends Component
         if ($this->page_view) {
 
             $customer_id = \customer()->id;
-            $customers = Customer::mine()->orWhere('id',$customer_id)->order()->get();
+            $customers = Customer::mine()->orWhere('id', $customer_id)->order()->get();
 
             if ($this->user) {
                 $user = $this->user;
@@ -82,6 +87,7 @@ class Users extends Component
                 $this->name = $user->name;
                 $this->username = $user->username;
                 $this->phone = $user->phone;
+                $this->status = $user->status;
                 $this->customer_id = $user->customer->uuid;
 
             }
@@ -110,7 +116,7 @@ class Users extends Component
     public function new_user()
     {
         $this->validate();
-        $customer = Customer::where('uuid', $this->customer_id)->mine()->orWhere('id',\customer()->id)->firstOrFail();
+        $customer = Customer::where('uuid', $this->customer_id)->mine()->orWhere('id', \customer()->id)->firstOrFail();
 
         $password = str_shuffle(Str::password(10, true, true, false) . '@+');
 
@@ -129,7 +135,7 @@ class Users extends Component
         trail('user-created', 'User created successfully', $user);
 
 
-        session()->flash('message','Portal user created. </br></br>Username: ' . $user->username . '</br></br>   Password: ' . $password . ' </br>');
+        session()->flash('message', 'Portal user created. </br></br>Username: ' . $user->username . '</br></br>   Password: ' . $password . ' </br>');
 
 
         // session()->flash('message', 'User create successfully. Login details sent to: ' . $this->username);
@@ -145,23 +151,31 @@ class Users extends Component
         $this->validate();
 
         $user = User::findByUuid($this->user_uuid);
+        $current_status = $user->status;
 
-        $customer = Customer::where('uuid', $this->customer_id)->mine()->firstOrFail();
+        $customer = Customer::where('uuid', $this->customer_id)->mine()->orWhere('id', \customer()->id)->firstOrFail();
 
         $update = $user->update([
             'name' => $this->name,
             'phone' => $this->phone,
             'customer_id' => $customer->id,
+            'status' => $this->status,
             'username' => $this->username,
         ]);
 
-        Log::info('update_user', ['update' => $update, 'this' => $this]);
 
         trail('user-updated', 'User updated successfully', $user);
 
-        session()->flash('message', 'User updated successfully');
+        if (($this->status === 'suspended') && ($current_status!=='suspended')) {
+
+            DB::table('sessions')->where('user_id',$user->id)->delete();
+            session()->flash('message', 'User account has been suspended and has been logged out.');
+        } else {
+            session()->flash('message', 'User updated successfully');
+        }
 
         return redirect()->route('users');
+
     }
 
 

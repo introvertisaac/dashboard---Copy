@@ -48,6 +48,8 @@ class User extends Authenticatable
         ];
     }
 
+    public const SUSPENDED = 'suspended';
+    public const ACTIVE = 'active';
 
     public function setPasswordAttribute($value)
     {

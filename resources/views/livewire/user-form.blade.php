@@ -64,6 +64,25 @@
 
             </div>
 
+
+
+
+
+        </div>
+
+
+        <div class="row mt-4">
+
+            <div class="col-md-3 form-group">
+                <label class="body-title mb-3" for="status">Status</label>
+                <select id="status" class="foxrm-control" wire:model="status">
+                    <option value="">Select Status</option>
+                    <option value="active" {{ $status == 'active' ? 'selected' : '' }}>Active</option>
+                    <option value="suspended" {{ $status == 'suspended' ? 'selected' : '' }}>Suspended</option>
+                </select>
+                @error('status') <span class="error">{{ $message }}</span> @enderror
+            </div>
+
         </div>
 
         <div class="d-flex justify-content-end">
