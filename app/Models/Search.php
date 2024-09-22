@@ -95,6 +95,10 @@ class Search extends Model
         if ($customer->status != Customer::ACTIVE) {
             return ['error' => ['message' => 'Customer Account Disabled', 'response_code' => 403]];
         }
+
+        if (is_null($cost_client) || (intval($cost_client)<1)) {
+            return ['error' => ['message' => 'API pricing not configured', 'response_code' => 403]];
+        }
         $customer_charge = ($cost_client) ?: $_wholesale;
 
         try {
