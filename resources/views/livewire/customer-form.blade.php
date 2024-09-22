@@ -95,7 +95,7 @@
                 <div class="col-md-6 form-group mt-1 pt-4">
                     <label for="{{$service_key}}ApiCharge" class="body-title mb-3">{{$service['label']}} API
                         Charge</label>
-                    <input wire:key="charges.{{$service_key}}" wire:model="charges.{{$service_key}}" type="text"
+                    <input wire:key="charges.{{$service_key}}" wire:model="charges.{{$service_key}}" type="number"
                            class="form-control mb-3"
                            placeholder="Please enter the amount">
                     <span class="mt-4">
