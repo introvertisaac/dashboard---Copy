@@ -7,9 +7,13 @@
             <p>Here is a list of all the customers</p>
         </div>
 
-        <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10"><a wire:click="create()"
-                                                                                   {{--href="{{route('customers.create')}}"--}}
-                                                                                   class="button">Create Customer</a>
+        <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
+
+            @if (is_reseller())
+                <a wire:click="create()"
+                   {{--href="{{route('customers.create')}}"--}}
+                   class="button">Create Customer</a>
+            @endif
         </ul>
     </div>
 
@@ -48,8 +52,10 @@
 
                 @foreach($customers as $customer)
                     <tr>
-                        <td>@if ($customer->is_reseller)
+                        <td> @if ($customer->is_reseller)
                                 {!! status_label('r') !!}
+                            @else
+                                {!! status_label('c') !!}
                             @endif{{$customer->name}}</td>
                         <td>{{$customer->primary_email}}</td>
                         <td>{!! status_label($customer->status) !!}</td>
@@ -60,14 +66,20 @@
                         <td>
                             <div class="btn-group">
                                 <button type="button" class="btn btn-primary">Actions</button>
-                                <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
                                     <span class="visually-hidden">Toggle Dropdown</span>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" wire:click="edit('{{$customer->uuid}}')">Manage</a></li>
-                                    <li><a class="dropdown-item" wire:click="allocate('{{$customer->uuid}}')">Allocate Credit</a></li>
-                                    <li><a class="dropdown-item" wire:click="transfer('{{$customer->uuid}}')">Transfer Credits</a></li>
-                                    <li><a class="dropdown-item" href="{{route('dashboard.customer',['customer_uuid'=>$customer->uuid])}}">View Dashboard</a></li>
+                                    <li><a class="dropdown-item" wire:click="edit('{{$customer->uuid}}')">Manage</a>
+                                    </li>
+                                    <li><a class="dropdown-item" wire:click="allocate('{{$customer->uuid}}')">Allocate
+                                            Credit</a></li>
+                                    <li><a class="dropdown-item" wire:click="transfer('{{$customer->uuid}}')">Transfer
+                                            Credits</a></li>
+                                    <li><a class="dropdown-item"
+                                           href="{{route('dashboard.customer',['customer_uuid'=>$customer->uuid])}}">View
+                                            Dashboard</a></li>
                                 </ul>
                             </div>
 

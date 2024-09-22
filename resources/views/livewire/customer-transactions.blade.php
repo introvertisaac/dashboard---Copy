@@ -121,6 +121,7 @@
         <div class="row">
 
 
+            @if (is_reseller())
             <div class="col-md-4 ">
                 <div class="wg-chart-default tf-border summary-card">
                     <div class="flex">
@@ -155,6 +156,7 @@
                 </div>
             </div>
 
+            @endif
 
             <div class="col-md-4 ">
                 <div class="wg-chart-default tf-border summary-card">
@@ -183,7 +185,7 @@
                 </div>
             </div>
 
-
+                @if (is_reseller())
             <div class="col-md-4 ">
                 <div class="wg-chart-default tf-border summary-card">
                     <div class="flex">
@@ -210,6 +212,7 @@
 
                 </div>
             </div>
+                @endif
 
 
 

@@ -46,6 +46,13 @@ class Customers extends Component
         'phone' => 'required',
     ];
 
+    public function mount()
+    {
+        if (is_reseller() == false) {
+            abort(403, 'This customer cannot access this page.');
+        }
+    }
+
     public function updatingSearch()
     {
         $this->resetPage();

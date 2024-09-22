@@ -29,6 +29,7 @@ Route::middleware('auth')->group(callback: function () {
     Route::get('users', [UserController::class, 'index'])->name('users');
     Route::get('checks', [CheckController::class, 'index'])->name('checks');
     Route::get('customer-transactions', [CustomerTransactionController::class, 'index'])->name('customer.transactions');
+    Route::get('topup-history', [\App\Http\Controllers\TopupHistoryController::class, 'index'])->name('topup-history');
 
 });
 

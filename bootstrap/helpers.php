@@ -318,7 +318,7 @@ if (!function_exists('status_label')) {
         switch ($status) {
             case in_array($status, ['archived', 'correction', 'pending', 'partially-paid', 'expired']):
                 return badge('warning', title_case($status));
-            case in_array($status, ['active', 'published', 'paid', 'complete', 'confirmed', 'valid', 'validated', 'live', 'completed', 'resolved']):
+            case in_array($status, ['c','active', 'published', 'paid', 'complete', 'confirmed', 'valid', 'validated', 'live', 'completed', 'resolved']):
                 return badge('success', title_case($status));
             case in_array($status, ['rejected', 'blocked', 'banned', 'disable', 'used', 'unpaid']):
                 return badge('danger', title_case($status));
@@ -746,4 +746,9 @@ function service_label($service_id)
     $service_label = \Illuminate\Support\Arr::get($services,$service_id.'.label');
 
     return $service_label;
+}
+
+function is_reseller()
+{
+    return customer()->is_reseller;
 }

@@ -36,12 +36,14 @@
                 @endcan
 
                 @canany(['create_customers','manage_customers','view_customers'])
-                    <li class="menu-item menu_customers">
-                        <a href="{{route('customers')}}" class="menu_customers">
-                            <div class="icon"><i class="icon-user"></i></div>
-                            <div class="text">Customers</div>
-                        </a>
-                    </li>
+                    @if(is_reseller())
+                        <li class="menu-item menu_customers">
+                            <a href="{{route('customers')}}" class="menu_customers">
+                                <div class="icon"><i class="icon-user"></i></div>
+                                <div class="text">Customers</div>
+                            </a>
+                        </li>
+                    @endif
                 @endcanany
 
 
@@ -66,21 +68,27 @@
                                 <div class="text">Customer Transactions</div>
                             </a>
                         </li>
-                      {{--  <li class="sub-menu-item">
-                            <a href="#" class="">
-                                <div class="text">Revenue Report</div>
+
+
+                        <li class="sub-menu-item">
+                            <a href="{{route('topup-history')}}"  class="">
+                                <div class="text">Topup History</div>
                             </a>
                         </li>
 
-                        <li class="sub-menu-item">
-                            <a href="#" class="">
-                                <div class="text">Topup History</div>
-                            </a>
-                        </li>--}}
+                        {{--  <li class="sub-menu-item">
+                              <a href="#" class="">
+                                  <div class="text">Revenue Report</div>
+                              </a>
+                          </li>
+
+                          <li class="sub-menu-item">
+                              <a href="#" class="">
+                                  <div class="text">Topup History</div>
+                              </a>
+                          </li>--}}
                     </ul>
                 </li>
-
-
 
 
                 <li class="menu-item spacer" style="flex-grow: 1;"></li> <!-- Spacer to push items to bottom -->
