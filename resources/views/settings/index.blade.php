@@ -18,14 +18,15 @@
             <div class="widget-content-tab">
                 <div class="widget-content-inner active">
                     <p>
+                        @livewire('api-settings')
+                    </p>
+                </div>
+
+                <div class="widget-content-inner">
+                    <p>
 
                       @livewire('account-settings')
 
-                    </p>
-                </div>
-                <div class="widget-content-inner">
-                    <p>
-                        @livewire('api-settings')
                     </p>
                 </div>
 
