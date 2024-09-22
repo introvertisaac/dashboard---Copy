@@ -274,6 +274,8 @@ class Customers extends Component
                 $this->website = $customer->website;
                 $this->is_reseller = $customer->is_reseller;
                 $this->charges = (is_null($customer->charges)) ? [] : $customer->charges;
+            }else{
+                $this->customer = new Customer();
             }
 
             return view('livewire.' . $this->page_view, compact('services', 'customer_charges'));
