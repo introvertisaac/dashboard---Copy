@@ -24,6 +24,7 @@ class TopupHistory extends Component
     public $totalRevenue;
     public $totalExpense;
     public $totalDeposits;
+    public $currentBalance;
     public $profit;
     public $filteredTransactions;
     protected $paginationTheme = 'bootstrap';
@@ -70,6 +71,7 @@ class TopupHistory extends Component
         }
 
         $this->totalDeposits = $query->sum('amount');
+        $this->currentBalance = $customer->balance;
 
         $transactions = $query->orderBy('created_at', 'desc')->paginate(10);
 
