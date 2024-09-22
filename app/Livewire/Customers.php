@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Customer;
 use Bavix\Wallet\Models\Transfer;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -23,6 +24,7 @@ class Customers extends Component
     public $name;
     public $website;
     public $phone;
+    public $status;
     public $charges = [];
     public $is_reseller;
 
@@ -154,7 +156,6 @@ class Customers extends Component
         $customer_name = $customer_receiver->name;
 
 
-
         try {
             $transfer = $customer->wallet->transfer($customer_receiver_wallet, $amount, ['narration' => $narration, 'ip' => ip(), 'user_id' => user('id'), 'customer_id' => $this->customer->id]);
 
@@ -179,11 +180,7 @@ class Customers extends Component
         }
 
 
-
-
-
     }
-
 
 
     public function new_customer()
@@ -194,6 +191,7 @@ class Customers extends Component
             'name' => $this->name,
             'phone' => $this->phone,
             'primary_email' => $this->primary_email,
+            'status' => $this->status,
             'uuid' => uuid(),
             'api_count' => count(config('billing.services')),
             'created_by' => user('id'),
@@ -215,11 +213,13 @@ class Customers extends Component
 
         $customer = Customer::findByUuid($this->customer_uuid);
 
+        $current_status = $customer->status;
 
         $customer->update([
             'name' => $this->name,
             'phone' => $this->phone,
             'primary_email' => $this->primary_email,
+            'status' => $this->status,
             'api_count' => count(config('billing.services')),
             'created_by' => user('id'),
             'charges' => $this->charges,
@@ -230,7 +230,20 @@ class Customers extends Component
 
         trail('customer-updated', 'Customer updated successfully', $customer);
 
-        session()->flash('message', 'Customer updated successfully');
+
+        if (($this->status === 'suspended') && ($current_status !== 'suspended')) {
+
+            $customer_users = $customer->users()->get();
+           // $customer_customers = $customer->children()->get();
+            foreach ($customer_users as $customer_user) {
+                DB::table('sessions')->where('user_id', $customer_user->id)->delete();
+            }
+
+            session()->flash('message', 'Customer account has been suspended and associated users have been logged out. Any child account of the customer will also be suspended');
+        } else {
+            session()->flash('message', 'Customer updated successfully');
+        }
+
 
         $this->list();
     }
@@ -250,7 +263,9 @@ class Customers extends Component
                 $this->name = $customer->name;
                 $this->primary_email = $customer->primary_email;
                 $this->phone = $customer->phone;
+                $this->status = $customer->status;
                 $this->website = $customer->website;
+                $this->is_reseller = $customer->is_reseller;
                 $this->charges = (is_null($customer->charges)) ? [] : $customer->charges;
             }
 

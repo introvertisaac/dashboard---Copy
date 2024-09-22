@@ -24,13 +24,14 @@
             <div class="col-md-6 form-group">
                 <label for="email" class="body-title mb-3">Primary Email Address<span
                         class="text-danger">*</span></label>
-                <input type="email"  wire:model="primary_email" class="form-control" id="email"
+                <input type="email" wire:model="primary_email" class="form-control" id="email"
                        placeholder="Please enter the primary email address">
                 @error('primary_email') <span class="error text-danger">{{ $message }}</span> @enderror
             </div>
             <div class="col-md-6 form-group">
                 <label for="website" class="body-title mb-3">Website</label>
-                <input wire:model="website" type="text" class="form-control" id="website" placeholder="Please enter the website">
+                <input wire:model="website" type="text" class="form-control" id="website"
+                       placeholder="Please enter the website">
             </div>
         </div>
 
@@ -42,35 +43,48 @@
 
             <div class="row mt-3">
 
+                @if(customer()->is_reseller)
                 <div class="col-md-6 form-group">
-                    <label class="body-title mb-3" for="account_type">Account Type <span class="text-danger">*</span></label>
-                    <select name="account_type" id="account_type">
-                        <option value="reseller">Reseller</option>
-                        <option value="retail">Normal Customer</option>
+                    <label class="body-title mb-3" for="account_type">Account Type <span
+                            class="text-danger">*</span></label>
+                    <select wire:model="is_reseller" id="is_reseller">
+                        <option value="">Select Type</option>
+                        <option  {{ intval($customer->is_reseller) === 1 ? 'selected' : '' }} value="1">Reseller</option>
+                        <option {{ intval($customer->is_reseller) === 0 ? 'selected' : '' }} value="0">Normal Customer</option>
                     </select>
                     @error('account_type') <span class="error text-danger">{{ $message }}</span> @enderror
                 </div>
+                @endif
+
 
                 <div class="col-md-6 form-group">
-                    <label class="body-title mb-3" for="account_status">Account Status <span class="text-danger">*</span></label>
-                    <select name="account_status" id="account_status">
-                        <option value="active">Active</option>
-                        <option value="suspended">Suspended</option>
+                    <label class="body-title mb-3" for="status">Account Status</label>
+                    <select id="status" class="mb-2" wire:model="status">
+                        <option value="">Select Status</option>
+                        <option value="active" {{ $customer->status == 'active' ? 'selected' : '' }}>Active</option>
+                        <option value="suspended" {{ $customer->status == 'suspended' ? 'selected' : '' }}>Suspended
+                        </option>
                     </select>
-                    @error('account_status') <span class="error text-danger">{{ $message }}</span> @enderror
+                    @error('status') <span class="error">{{ $message }}</span> @enderror
+
+                    @if($customer->children->count())
+                    @if($customer->status=='active')
+                        <span class="">Changing the status to suspended will also change the status of child accounts ({{$customer->children->count()}}) related to this account</span>
+                    @endif
+
+                    @if($customer->status=='suspended')
+                        <span class="">Changing the status to active will only change status of this account, suspended child accounts ({{$customer->children->count()}}) will need to be activated manually</span>
+                    @endif
+
+                        @endif
+
                 </div>
+
 
             </div>
 
 
-
-
-
-
         </div>
-
-
-
 
 
         <div class="row">
@@ -81,7 +95,8 @@
                 <div class="col-md-6 form-group mt-1 pt-4">
                     <label for="{{$service_key}}ApiCharge" class="body-title mb-3">{{$service['label']}} API
                         Charge</label>
-                    <input wire:key="charges.{{$service_key}}" wire:model="charges.{{$service_key}}" type="text" class="form-control mb-3"
+                    <input wire:key="charges.{{$service_key}}" wire:model="charges.{{$service_key}}" type="text"
+                           class="form-control mb-3"
                            placeholder="Please enter the amount">
                     <span class="mt-4">
                         <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">

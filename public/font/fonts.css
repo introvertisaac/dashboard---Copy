@@ -112,11 +112,22 @@ input {
     box-shadow: 0 0 0 0.12rem rgba(255, 111, 0, 0.25);
 }
 
-.block-warning.type-custom {
+.block-warning.type-custom{
     color: #1FA613;
     background: #E8FFE6;
     word-break: break-all;
 }
+
+.bg-success{
+    background: #E8FFE6 !important;
+    color: #1FA613 !important;
+}
+
+.bg-secondary{
+    background: #FFFBF8 !important;
+    color: #EE7E16 !important;
+}
+
 
 /*
 

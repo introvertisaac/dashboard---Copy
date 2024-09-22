@@ -46,10 +46,9 @@ class CustomerObserver
         $customer->api_count = $this->compute_api_count($customer);
 
 
-
     }
 
- /**
+    /**
      * Handle the Customer "updating" event.
      */
     public function updating(Customer $customer): void
@@ -79,6 +78,15 @@ class CustomerObserver
     public function updated(Customer $customer): void
     {
         //
+
+        if ($customer->wasChanged('status') && $customer->status === 'suspended') {
+            $children = $customer->children()->get();
+            foreach ($children as $child) {
+                $child->update(['status' => Customer::SUSPENDED]);
+            }
+
+        }
+
 
     }
 

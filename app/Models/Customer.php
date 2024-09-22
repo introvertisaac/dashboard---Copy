@@ -23,6 +23,7 @@ class Customer extends Model implements Wallet
     protected $guarded = [];
 
     public const DISABLED = 'disabled';
+    public const SUSPENDED = 'suspended';
     public const ACTIVE = 'active';
 
     public function getTotalDepositsAttribute()

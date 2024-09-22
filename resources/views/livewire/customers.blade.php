@@ -37,8 +37,10 @@
                 <tr>
                     <th class="w-25">Customer Name</th>
                     <th class="w-25">Email</th>
+                    <th>Status</th>
                     <th>Balance</th>
                     <th>Number of APIs</th>
+                    <th></th>
                     <th></th>
                 </tr>
                 </thead>
@@ -46,10 +48,14 @@
 
                 @foreach($customers as $customer)
                     <tr>
-                        <td>{{$customer->name}}</td>
+                        <td>@if ($customer->is_reseller)
+                                {!! status_label('r') !!}
+                            @endif{{$customer->name}}</td>
                         <td>{{$customer->primary_email}}</td>
+                        <td>{!! status_label($customer->status) !!}</td>
                         <td>{{$customer->balance_label}}</td>
                         <td>{{$customer->api_count}}</td>
+
 
                         <td>
                             <div class="btn-group">
