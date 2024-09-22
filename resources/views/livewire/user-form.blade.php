@@ -11,7 +11,7 @@
                     <select id="customer_id" class="" wire:model="customer_id">
                         <option value="">---Select Customer---</option>
                         @foreach($customers as $customer)
-                            <option value="{{$customer->uuid}}">{{$customer->name}}</option>
+                            <option {{ $customer->id == $customer_id ? 'selected' : '' }} value="{{$customer->uuid}}">{{$customer->name}}</option>
                         @endforeach
                     </select>
                     @error('customer_id') <span class="error text-danger">{{ $message }}</span> @enderror
