@@ -116,7 +116,11 @@ class Users extends Component
     public function new_user()
     {
         $this->validate();
-        $customer = Customer::where('uuid', $this->customer_id)->mine()->orWhere('id', \customer()->id)->firstOrFail();
+        $customer = Customer::where('uuid', $this->customer_id)->mine()->first();
+
+        if(!$customer){
+            $customer = \customer();
+        }
 
         $password = str_shuffle(Str::password(10, true, true, false) . '@+');
 
@@ -153,7 +157,12 @@ class Users extends Component
         $user = User::findByUuid($this->user_uuid);
         $current_status = $user->status;
 
-        $customer = Customer::where('uuid', $this->customer_id)->mine()->orWhere('id', \customer()->id)->firstOrFail();
+        $customer = Customer::where('uuid', $this->customer_id)->mine()->first();
+
+        if(!$customer){
+            $customer = \customer();
+        }
+
 
         $update = $user->update([
             'name' => $this->name,
