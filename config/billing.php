@@ -30,7 +30,7 @@ return [
         'national_id' => ['input_label' => 'National ID Number', 'label' => 'National ID'],
         'alien_id' => ['input_label' => 'Alien ID Number', 'label' => 'Alien ID'],
         'plate' => ['input_label' => 'Vehicle Number Plate', 'label' => 'Vehicle Plate'],
-        'dl' => ['input_label' => 'Driving License', 'label' => 'Driving License'],
+        'dl' => ['input_label' => 'National ID for DL Owner', 'label' => 'Driving License'],
         'kra' => ['input_label' => 'KRA Pin', 'label' => 'KRA Pin'],
         'brs' => ['input_label' => 'Company Registration Number', 'label' => 'Business'],
         'collateral' => ['input_label' => 'Collateral Identifier eg. Chassis Number', 'label' => 'Collateral'],
