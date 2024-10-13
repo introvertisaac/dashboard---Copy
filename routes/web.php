@@ -1,11 +1,13 @@
 <?php
 
 use App\Http\Controllers\CheckController;
+use App\Http\Controllers\ChildAccountController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CustomerTransactionController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GuestController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\TopupHistoryController;
 use App\Http\Controllers\UserController;
 use App\Livewire\PasswordReset;
 use App\Livewire\PasswordResetForm;
@@ -29,7 +31,9 @@ Route::middleware('auth')->group(callback: function () {
     Route::get('users', [UserController::class, 'index'])->name('users');
     Route::get('checks', [CheckController::class, 'index'])->name('checks');
     Route::get('customer-transactions', [CustomerTransactionController::class, 'index'])->name('customer.transactions');
-    Route::get('topup-history', [\App\Http\Controllers\TopupHistoryController::class, 'index'])->name('topup-history');
+    Route::get('topup-history', [TopupHistoryController::class, 'index'])->name('topup-history');
+    Route::get('child-accounts', [ChildAccountController::class, 'index'])->name('child-accounts');
+
 
 });
 

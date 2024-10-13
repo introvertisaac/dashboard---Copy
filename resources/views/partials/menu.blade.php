@@ -76,6 +76,13 @@
                             </a>
                         </li>
 
+
+                        <li class="sub-menu-item">
+                            <a href="{{route('child-accounts')}}"  class="">
+                                <div class="text">Child Accounts</div>
+                            </a>
+                        </li>
+
                         {{--  <li class="sub-menu-item">
                               <a href="#" class="">
                                   <div class="text">Revenue Report</div>

@@ -91,7 +91,21 @@ class Customer extends Model implements Wallet
     }
 
 
+    public function childAccounts()
+    {
+        return $this->children();
+    }
 
+    public function allChildAccounts()
+    {
+        return $this->childAccounts()->with('allChildAccounts');
+    }
+
+    // Get count of child accounts
+    public function getChildAccountsCountAttribute()
+    {
+        return $this->childAccounts->count();
+    }
 
     public static function findByUuid($uuid)
     {
