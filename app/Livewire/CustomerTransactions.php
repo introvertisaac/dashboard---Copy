@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Ledger;
@@ -45,7 +46,6 @@ class CustomerTransactions extends Component
     }
 
 
-
     public function render()
     {
         $customer_id = customer()->id;
@@ -62,8 +62,17 @@ class CustomerTransactions extends Component
         }
 
         if ($this->selectedCustomerId) {
-            $query->where('initiating_customer_id', $this->selectedCustomerId)->where('customer_id', $customer_id);
+
+            if ($this->selectedCustomerId === 'merged') {
+
+                $query->where('initiating_customer_id', '!=', $customer_id)->where('customer_id', $customer_id);
+
+            } else {
+                $query->where('initiating_customer_id', $this->selectedCustomerId)->where('customer_id', $customer_id);
+            }
+
         }
+
 
         if ($this->selectedService) {
             $query->where('service', $this->selectedService);
