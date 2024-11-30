@@ -10,6 +10,7 @@ return [
     'phone' => env('PHONE_CHECK_COST', 2),
     'bank' => env('BANK_CHECK_COST', 1),
     'collateral' => env('COLLATERAL_CHECK_COST', 400),
+    'validate_phone' => env('PHONE_VALIDATION_COST', 5),
 
 
     'free_wallet_amount' => env('TEST_CUSTOMER_AMOUNT', 3000),
@@ -23,6 +24,7 @@ return [
     'phone_wholesale' => env('PHONE_CHECK_WHOLESALE', 2),
     'bank_wholesale' => env('BANK_CHECK_WHOLESALE', 1),
     'collateral_wholesale' => env('BANK_CHECK_WHOLESALE', 400),
+    'validate_phone_wholesale' => env('PHONE_VALIDATION_WHOLESALE', 8),
 
 
     'services' => [
@@ -34,8 +36,8 @@ return [
         'kra' => ['input_label' => 'KRA Pin', 'label' => 'KRA Pin'],
         'brs' => ['input_label' => 'Company Registration Number', 'label' => 'Business'],
         'collateral' => ['input_label' => 'Collateral Identifier eg. Chassis Number', 'label' => 'Collateral'],
-        'bank' => ['input_label' => 'Bank Account Number', 'label' => 'Bank Account']
-
+        'bank' => ['input_label' => 'Bank Account Number', 'label' => 'Bank Account'],
+        'validate_phone' => ['input_label' => 'Phone Number', 'label' => 'Phone Number']
     ],
 
 

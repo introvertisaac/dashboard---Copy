@@ -4,32 +4,47 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Contracts\Validation\Validator;
 
 class IdRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
+    protected $stopOnFirstFailure = true;
+
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
+    protected function getValidatorInstance()
+    {
+        $rawContent = $this->getContent();
+
+        if (preg_match('/"idnumber"\s*:\s*(\d+)/', $rawContent, $matches)) {
+            $idnumber = $matches[1];
+
+            $this->merge([
+                'idnumber' => $idnumber
+            ]);
+            $this->request->set('idnumber', $idnumber);
+        }
+
+        return parent::getValidatorInstance();
+    }
+
+    public function validationData()
+    {
+        return parent::validationData();
+    }
+
     public function rules(): array
     {
         return [
-            'idnumber' => 'required|integer',
+            'idnumber' => ['required', 'regex:/^[0-9]+$/']
         ];
     }
 
-    public function failedValidation(Validator|\Illuminate\Contracts\Validation\Validator $validator){
-
+    public function failedValidation(Validator $validator)
+    {
         throw new HttpResponseException(response()->json([
             'success'   => false,
             'response_code' => 412,
@@ -38,5 +53,8 @@ class IdRequest extends FormRequest
         ]));
     }
 
-
+    public function all($keys = null)
+    {
+        return parent::all($keys);
+    }
 }

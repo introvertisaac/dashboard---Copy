@@ -41,39 +41,62 @@ class Kyc extends Component
     public function kyc_check()
     {
         $this->openModal();
-
-        $query_value = $this->bank ? $this->bank . '-' . $this->check_number : $this->check_number;
-        $query_value = removeAllSpaces($query_value); //solve spaced number plate
-
-        $transaction = Search::newSearch(user(), $this->check_type, $query_value, null, 'portal');
-
+    
+        // Handle bank account format
+        if ($this->check_type === 'bank') {
+            $query_value = $this->bank ? $this->bank . '-' . $this->check_number : $this->check_number;
+        } 
+        // Handle ID numbers specifically
+        else if (in_array($this->check_type, ['national_id', 'alien_id'])) {
+            // Strip leading zeros for ID checks
+            $query_value = ltrim($this->check_number, '0');
+        }
+        // Handle all other cases
+        else {
+            $query_value = $this->check_number;
+        }
+    
+        // Remove any spaces
+        $query_value = removeAllSpaces($query_value);
+    
+        $transaction = Search::newSearch(
+            user(), 
+            $this->check_type, 
+            $query_value, 
+            null, 
+            'portal'
+        );
+    
         if ($transaction instanceof Search) {
-
+            Log::info('KYC Check Request', [
+                'type' => $this->check_type,
+                'original' => $this->check_number,
+                'processed' => $query_value
+            ]);
+    
             $call_response = check_call($this->check_type, $query_value);
-
+    
             if (is_array($call_response)) {
-
                 $transaction->update([
                     'response' => $call_response
                 ]);
-
-                $this->balance_impact = ['Balance Before' => optional($transaction)->balance_before, 'Balance After' => optional($transaction)->balance_after];
-
-                $this->check_result = ($call_response);
-            }
-            #Log::info($this->check_type, ['query' => $this->check_number, 'response' => $this->check_result]);
-        } else {
-
-            if (is_array($transaction) && Arr::get($transaction, 'error')) {
-
-                $this->check_result = [
-                    'Unable to perform search' => ['Reason' => Arr::get($transaction, 'error.message', 'Unable to complete request')]
+    
+                $this->balance_impact = [
+                    'Balance Before' => optional($transaction)->balance_before, 
+                    'Balance After' => optional($transaction)->balance_after
                 ];
-
+    
+                $this->check_result = $call_response;
+            }
+        } else {
+            if (is_array($transaction) && Arr::get($transaction, 'error')) {
+                $this->check_result = [
+                    'Unable to perform search' => [
+                        'Reason' => Arr::get($transaction, 'error.message', 'Unable to complete request')
+                    ]
+                ];
             }
         }
-
-
     }
 
 

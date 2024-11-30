@@ -28,6 +28,15 @@ return [
         'key' => env('RESEND_KEY'),
     ],
 
+
+    'zamupay' => [
+    'use_test_data' => env('ZAMUPAY_USE_TEST_DATA', false),
+    'base_url' => env('ZAMUPAY_BASE_URL'),
+    'sts_url' => env('ZAMUPAY_STS_URL'),
+    'client_id' => env('ZAMUPAY_CLIENT_ID'),
+    'client_secret' => env('ZAMUPAY_CLIENT_SECRET'),
+    'callback_url' => env('ZAMUPAY_CALLBACK_URL'),
+],
     'slack' => [
         'notifications' => [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),

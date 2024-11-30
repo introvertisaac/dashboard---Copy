@@ -9,10 +9,13 @@ use App\Http\Requests\IdRequest;
 use App\Http\Requests\KrapinRequest;
 use App\Http\Requests\PhoneRequest;
 use App\Http\Requests\VehiclePlateRequest;
+use App\Services\AccountValidationService;
+use App\Http\Requests\AccountValidationRequest;
 use App\Models\Search;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 use function PHPUnit\Framework\isJson;
 
 class ApiController extends Controller
@@ -28,20 +31,48 @@ class ApiController extends Controller
      */
     public function id(IdRequest $request)
     {
-        $idnumber = $request->get('idnumber');
-
+        Log::info('Controller input', [
+            'all' => $request->all(),
+            'input' => $request->input(),
+            'raw' => $request->get('idnumber')
+        ]);
+    
+        // Get and clean the ID number before making the API call
+        $original_id = $request->get('idnumber');
+        // Ensure we strip leading zeros for the API call
+        $idnumber = ltrim($original_id, '0');
+        
+        Log::info('ID API Call', [
+            'original_id' => $original_id,
+            'processed_id' => $idnumber
+        ]);
+    
         $transaction = Search::newSearch($request->user(), 'national_id', $idnumber);
-
+    
         if ($transaction instanceof Search) {
-
+            // Log before making API call
+            Log::info('ID API Call - Making external request', [
+                'id' => $idnumber,
+                'transaction_id' => $transaction->search_uuid,
+                'request_ip' => $request->ip()
+            ]);
+    
             $call_response = check_call('national_id', $idnumber);
-
+    
+            // Log the API response
+            Log::info('ID API Call - Received response', [
+                'id' => $idnumber,
+                'transaction_id' => $transaction->search_uuid,
+                'response_type' => gettype($call_response),
+                'is_array' => is_array($call_response),
+                'request_ip' => $request->ip()
+            ]);
+    
             if (is_array($call_response)) {
-
                 $transaction->update([
                     'response' => $call_response
                 ]);
-
+    
                 return response()->json([
                     'success' => true,
                     'response_code' => 200,
@@ -49,13 +80,11 @@ class ApiController extends Controller
                     'data' => $call_response,
                     'request_id' => $transaction->search_uuid
                 ]);
-
             } else {
-
                 $transaction->update([
                     'response' => $call_response
                 ]);
-
+    
                 return response()->json([
                     'success' => true,
                     'response_code' => 204,
@@ -63,16 +92,18 @@ class ApiController extends Controller
                     'data' => $call_response,
                     'request_id' => $transaction->search_uuid
                 ]);
-
             }
-
-
         }
-
+    
+        // Log error cases
+        Log::error('ID API Call - Transaction creation failed', [
+            'id' => $idnumber,
+            'transaction' => $transaction,
+            'request_ip' => $request->ip()
+        ]);
+    
         return $this->error_handle($transaction);
-
     }
-
 
     /**
      * Alien ID
@@ -551,6 +582,164 @@ class ApiController extends Controller
 
     }
 
+
+/**
+ * Phone Number
+ *
+ * Returns the details associated with the submitted phone number and institution, ensuring the accuracy and validity of the information provided. For the Institution Code, use 63902 (Safaricom).
+ *
+ * @response array{success:true, response_code:200, message:"Phone Number Details Fetched Successfully", data:array{"name":"JANE DOE SMITH","phone":"+254700000000","institution":"Safaricom","reference":"79ed217f-9c3b-470b-9a5e-4859e873d005"}, request_id:"550e8400-e29b-41d4-a716-446655440000"}
+ * @response array{success:false, response_code:424, message:"Phone number validation failed", data:array{}, request_id:"550e8400-e29b-41d4-a716-446655440000"} 
+ */
+public function validateAccount(AccountValidationRequest $request)
+{
+    $accountNumber = $request->get('account_number');
+    $institutionCode = $request->get('institution_code');
+    
+    // Debug logging
+    \Log::info('Account Validation Request', [
+        'account_number' => $accountNumber,
+        'institution_code' => $institutionCode,
+        'customer' => $request->user()->customer->name
+    ]);
+    
+    // Create a new search record
+    $transaction = Search::newSearch($request->user(), 'validate_phone', $accountNumber, [
+        'institution_code' => $institutionCode
+    ]);
+
+    if (!($transaction instanceof Search)) {
+        return $this->error_handle($transaction);
+    }
+
+    try {
+        $call_response = check_call('validate_phone', $accountNumber, [
+            'institution_code' => $institutionCode
+        ]);
+
+        if ($call_response) {
+            $transaction->update([
+                'response' => $call_response
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'response_code' => 200,
+                'message' => 'Account Details Fetched Successfully',
+                'data' => $call_response,
+                'request_id' => $transaction->search_uuid
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'response_code' => 424,
+            'message' => 'Account validation failed',
+            'data' => [],
+            'request_id' => $transaction->search_uuid
+        ]);
+
+    } catch (\Exception $e) {
+        Log::error('Account Validation Error', [
+            'error' => $e->getMessage(),
+            'account' => $accountNumber,
+            'institution' => $institutionCode,
+            'search_id' => $transaction->id
+        ]);
+
+        $transaction->update([
+            'response' => ['error' => $e->getMessage()]
+        ]);
+
+        return response()->json([
+            'success' => false,
+            'response_code' => 424,
+            'message' => 'Account validation failed',
+            'data' => [],
+            'request_id' => $transaction->search_uuid
+        ]);
+    }
+}
+
+public function getAccountTestData($accountNumber, $institutionCode)
+{
+   // Test data for specific numbers we want to always return the same data for
+   $fixedTestAccounts = [
+       '0700000000' => [
+           'name' => 'JOHN KARIUKI KAMAU',
+           'account' => '+254703121492', 
+           'institution' => 'Safaricom',
+           'reference' => (string) Str::uuid()
+       ],
+       '0700000001' => [
+           'name' => 'SARAH WANJIKU MAINA',
+           'account' => '+254000000001',
+           'institution' => 'Safaricom', 
+           'reference' => (string) Str::uuid()
+       ],
+       '0700000002' => [
+           'name' => 'PETER OCHIENG OTIENO',
+           'account' => '+254000000002',
+           'institution' => 'Safaricom',
+           'reference' => (string) Str::uuid()
+       ]
+   ];
+
+   // Format phone number to handle different formats
+   $searchNumber = $accountNumber;
+   if (str_starts_with($accountNumber, '0')) {
+       $searchNumber = $accountNumber;
+   } elseif (str_starts_with($accountNumber, '+254')) {
+       $searchNumber = '0' . substr($accountNumber, 4);
+   }
+
+   // If it's one of our fixed test accounts, return that specific data
+   if (isset($fixedTestAccounts[$searchNumber])) {
+       return $fixedTestAccounts[$searchNumber];
+   }
+
+   // Validate phone number format
+   if (!preg_match('/^(?:254|\+254|0)?(7\d{8})$/', $searchNumber, $matches)) {
+       return [
+           'name' => 'INVALID REQUEST',
+           'account' => 'Please provide a valid phone number',
+           'institution' => $this->getInstitutionName($institutionCode),
+           'reference' => (string) Str::uuid()
+       ];
+   }
+
+   // For any other valid phone number, return random test data
+   $names = [
+       'JANE DOE SMITH',
+       'JOHN DOE SMITH',
+       'MARY DOE SMITH',
+       'JAMES DOE SMITH',
+       'ELIZABETH DOE SMITH'
+   ];
+
+   // Return random name but consistent per phone number by using it as a seed
+   $numericSeed = crc32($searchNumber);
+   mt_srand($numericSeed);
+   $randomName = $names[array_rand($names)];
+
+   return [
+       'name' => $randomName,
+       'account' => '+254' . $matches[1],
+       'institution' => $this->getInstitutionName($institutionCode),
+       'reference' => (string) Str::uuid()
+   ];
+}
+
+private function getInstitutionName($code)
+{
+  $institutions = [
+      '63902' => 'Safaricom',
+      '63903' => 'Airtel Money',
+      '63904' => 'Telkom T-Kash'
+  ];
+
+  return $institutions[$code] ?? 'Unknown Institution';
+}
 
     /**
      * Collateral
