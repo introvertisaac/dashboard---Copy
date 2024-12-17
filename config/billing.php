@@ -7,10 +7,9 @@ return [
     'kra' => env('KRA_PIN_CHECK_COST', 1),
     'dl' => env('DL_CHECK_COST', 25),
     'plate' => env('PLATE_CHECK_COST', 450),
-    'phone' => env('PHONE_CHECK_COST', 2),
     'bank' => env('BANK_CHECK_COST', 1),
     'collateral' => env('COLLATERAL_CHECK_COST', 400),
-    'validate_phone' => env('PHONE_VALIDATION_COST', 5),
+    'phone' => env('PHONE_CHECK_COST', 5),
 
 
     'free_wallet_amount' => env('TEST_CUSTOMER_AMOUNT', 3000),
@@ -21,10 +20,9 @@ return [
     'kra_pin_wholesale' => env('KRA_PIN_CHECK_WHOLESALE', 2),
     'dl_wholesale' => env('DL_CHECK_WHOLESALE', 25),
     'plate_wholesale' => env('PLATE_CHECK_WHOLESALE', 450),
-    'phone_wholesale' => env('PHONE_CHECK_WHOLESALE', 2),
     'bank_wholesale' => env('BANK_CHECK_WHOLESALE', 1),
     'collateral_wholesale' => env('BANK_CHECK_WHOLESALE', 400),
-    'validate_phone_wholesale' => env('PHONE_VALIDATION_WHOLESALE', 8),
+    'phone_wholesale' => env('PHONE_CHECK_WHOLESALE', 5),
 
 
     'services' => [
@@ -37,7 +35,7 @@ return [
         'brs' => ['input_label' => 'Company Registration Number', 'label' => 'Business'],
         'collateral' => ['input_label' => 'Collateral Identifier eg. Chassis Number', 'label' => 'Collateral'],
         'bank' => ['input_label' => 'Bank Account Number', 'label' => 'Bank Account'],
-        'validate_phone' => ['input_label' => 'Phone Number', 'label' => 'Phone Number']
+        'phone' => ['input_label' => 'Phone Number', 'label' => 'Phone Number'],
     ],
 
 

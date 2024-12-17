@@ -696,7 +696,7 @@ function my_float()
 function check_call($check, $query, $extra_params = [])
 {
     // Handle phone validation first
-    if ($check === 'validate_phone') {
+    if ($check === 'phone') {
         try {
             $validationService = app(\App\Services\AccountValidationService::class);
             $institution_code = $extra_params['institution_code'] ?? '63902';

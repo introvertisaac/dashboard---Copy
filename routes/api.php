@@ -31,7 +31,7 @@ Route::middleware('auth:sanctum')->prefix('v1')->middleware(ApiAuthMiddleware::c
     Route::post('collateral', [ApiController::class, 'collateral'])->name('Collateral');
     //Route::any('phone', [ApiController::class, 'phone'])->name('phone');
     Route::get('banklist', [ApiController::class, 'banks'])->name('Banks');
-    Route::post('validate-phone', [ApiController::class, 'validateAccount'])->name('Phone Number');
+    Route::post('phone', [ApiController::class, 'validateAccount'])->name('Phone Number');  
     Route::post('bank', [ApiController::class, 'bank'])->name('Bank Account');
     Route::get('balance', [ApiController::class, 'balance'])->name('Balance');
 
