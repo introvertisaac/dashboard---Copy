@@ -54,12 +54,16 @@
                         <fieldset class="customerFilter">
                             <div class="body-title mb-3">Customer:</div>
                             <div class="select">
-                                <select id="customerFilter" wire:model="selectedCustomerId">
-                                    <option value="{{customer()->id}}">{{customer()->name}} (Self)</option>
-                                    @foreach($customers as $customer)
-                                        <option value="{{ $customer->id }}">{{ $customer->name }}</option>
-                                    @endforeach
-                                </select>
+                            <select id="customerFilter" wire:model="selectedCustomerId">
+    <option value="">All Customers (Inc Self)</option>
+    @if(is_reseller())
+        <option value="merged">Merged Child Accounts (Minus Self)</option>
+    @endif
+    <option value="{{customer()->id}}">{{customer()->name}} (Self)</option>
+    @foreach($customers as $customer)
+        <option value="{{ $customer->id }}">{{ $customer->name }}</option>
+    @endforeach
+</select>
                             </div>
                         </fieldset>
                     @endif
