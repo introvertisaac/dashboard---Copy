@@ -751,6 +751,70 @@ function check_call($check, $query, $extra_params = [])
     return null;
 }
 
+
+
+// function check_call($check, $query, $extra_params = [])
+// {
+//     // Handle phone validation first
+//     if ($check === 'phone') {
+//         try {
+//             $validationService = app(\App\Services\AccountValidationService::class);
+//             $institution_code = $extra_params['institution_code'] ?? '63902';
+            
+//             // Check for test mode
+//             $useTestData = config('services.zamupay.use_test_data', false);
+//             if ($useTestData === true) {
+//                 $controller = app(\App\Http\Controllers\ApiController::class);
+//                 return $controller->getAccountTestData($query, $institution_code);
+//             }
+
+//             $response = $validationService->validateAccount($query, $institution_code);
+            
+//             $institutions = [
+//                 '63902' => 'Safaricom',
+//                 '63903' => 'Airtel Money',
+//                 '63904' => 'Telkom T-Kash'
+//             ];
+
+//             return [
+//                 'name' => $response['account_holder'],
+//                 'account' => $response['account_number'],
+//                 'institution' => $institutions[$institution_code] ?? 'Unknown Institution',
+//                 'reference' => $response['reference_number'] ?? (string) \Illuminate\Support\Str::uuid()
+//             ];
+
+//         } catch (\Exception $e) {
+//             \Illuminate\Support\Facades\Log::error('Phone validation exception', [
+//                 'error' => $e->getMessage(),
+//                 'query' => $query,
+//                 'institution_code' => $extra_params['institution_code'] ?? '63902'
+//             ]);
+//             return null;
+//         }
+//     }
+
+//     // Keep your existing proxy endpoint handling
+//     $base_url = config('app.proxy_base_url');
+//     $headers = [
+//         'P-Key' => config('app.proxy_key'),
+//         'Accept' => 'application/json',
+//     ];
+
+//     $query = base64_encode($query);
+//     $url = "$base_url/$check/$query";
+
+//     $response = Http::withoutVerifying()  // This disables SSL verification
+//         ->withHeaders($headers)
+//         ->get($url);
+        
+//     if ($response->status()) {
+//         return $response->json();
+//     }
+
+//     return null;
+// }
+
+
 function retainArrayElementsByKeys($array, $keysToRetain)
 {
     $keysToRetain = array_flip($keysToRetain);

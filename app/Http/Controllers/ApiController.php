@@ -717,6 +717,221 @@ private function getInstitutionName($code)
 
     return $institutions[$code] ?? 'Unknown Institution';
 }
+
+
+
+/**
+ * Unified Verification
+ * 
+ * Single endpoint to handle all types of verifications. Pass the verification type and respective parameters.
+ * 
+ * Supported types and their required parameters:
+ * - national_id: { "type": "national_id", "idnumber": "12345678" }
+ *   Returns ID details including full name, gender, date of birth
+ * 
+ * - alien_id: { "type": "alien_id", "idnumber": "12345678" }
+ *   Returns alien ID details including full name, gender, date of birth
+ * 
+ * - dl: { "type": "dl", "idnumber": "12345678" }
+ *   Returns driving license details including status, expiry, and points
+ * 
+ * - krapin: { "type": "krapin", "pinnumber": "A12345678B" }
+ *   Returns KRA Pin details including taxpayer name and status
+ * 
+ * - business: { "type": "business", "regnumber": "BRS-123456" }
+ *   Returns business registration details including business name, status, and address
+ * 
+ * - plate: { "type": "plate", "plate": "KXX123X" }
+ *   Returns vehicle details including ownership, model, and registration status
+ * 
+ * - collateral: { "type": "collateral", "serialno": "CHASSIS123456" }
+ *   Returns collateral status for given serial number
+ * 
+ * - phone: { "type": "phone", "account_number": "254700000000", "institution_code": "63902" }
+ *   Returns phone number validation details. Institution codes: 63902 (Safaricom), 63903 (Airtel), 63904 (Telkom)
+ * 
+ * - bank: { "type": "bank", "bankid": 1, "account": "1234567890" }
+ *   Returns bank account validation details. Use /banklist endpoint to get bankid values
+ * 
+ * Notes:
+ * - All verifications require authentication via Bearer token
+ * - Each verification type has its own pricing as configured in your account
+ * - Phone verification defaults to Safaricom (63902) if institution_code not provided
+ * - Responses include a unique request_id for tracking
+ * 
+ * @response scenario="Success" {
+ *   "success": true,
+ *   "response_code": 200,
+ *   "message": "Details Fetched Successfully",
+ *   "data": {
+ *     // Response data varies by verification type
+ *   },
+ *   "request_id": "550e8400-e29b-41d4-a716-446655440000"
+ * }
+ * 
+ * @response scenario="Validation Error" {
+ *   "success": false,
+ *   "response_code": 412,
+ *   "message": "Validation errors",
+ *   "data": {
+ *     "field": ["Error message"]
+ *   }
+ * }
+ * 
+ * @response scenario="Low Balance" {
+ *   "success": false,
+ *   "response_code": 402,
+ *   "message": "Low credit balance, kindly topup account",
+ *   "data": []
+ * }
+ * 
+ * @response scenario="Invalid Type" {
+ *   "success": false,
+ *   "response_code": 412,
+ *   "message": "Invalid verification type",
+ *   "data": {
+ *     "type": ["The selected verification type is invalid"]
+ *   }
+ * }
+ */
+public function unifiedVerification(Request $request)
+{
+    $type = $request->get('type');
+    
+    if (!$type) {
+        return response()->json([
+            'success' => false,
+            'response_code' => 412,
+            'message' => 'Verification type is required',
+            'data' => ['type' => ['The verification type field is required']]
+        ]);
+    }
+
+    // Map the unified endpoint types to their corresponding handler methods
+    $handlers = [
+        'national_id' => [$this, 'id'],
+        'alien_id' => [$this, 'alienid'],
+        'dl' => [$this, 'dl'],
+        'krapin' => [$this, 'krapin'],
+        'business' => [$this, 'business'],
+        'plate' => [$this, 'vehicleplate'],
+        'collateral' => [$this, 'collateral'],
+        'phone' => [$this, 'validateAccount'],
+        'bank' => [$this, 'bank']
+    ];
+
+    if (!isset($handlers[$type])) {
+        return response()->json([
+            'success' => false,
+            'response_code' => 412,
+            'message' => 'Invalid verification type',
+            'data' => ['type' => ['The selected verification type is invalid']]
+        ]);
+    }
+
+    // Clone the request and update its parameters based on the type
+    $clonedRequest = clone $request;
+    $mappedParams = $this->mapRequestParameters($type, $request);
+    
+    // Update the request data correctly
+    $clonedRequest->replace($mappedParams->all());
+    
+    // Create the appropriate form request with the mapped data
+    $formRequest = $this->createFormRequest($type, $clonedRequest, $request->user());
+
+    return call_user_func($handlers[$type], $formRequest);
+}
+
+/**
+ * Maps the unified verification parameters to their corresponding handler parameters
+ * 
+ * @param string $type The verification type
+ * @param Request $request The original request
+ * @return Request A new request with mapped parameters
+ */
+private function mapRequestParameters($type, Request $request)
+{
+    $mappings = [
+        'national_id' => ['idnumber' => $request->input('idnumber')],
+        'alien_id' => ['idnumber' => $request->input('idnumber')],
+        'dl' => ['idnumber' => $request->input('idnumber')],
+        'krapin' => ['pinnumber' => $request->input('pinnumber')],
+        'business' => ['regnumber' => $request->input('regnumber')],
+        'plate' => ['plate' => $request->input('plate')],
+        'collateral' => ['serialno' => $request->input('serialno')],
+        'phone' => [
+            'account_number' => $request->input('account_number'),
+            'institution_code' => $request->input('institution_code', '63902') // Default to Safaricom
+        ],
+        'bank' => [
+            'bankid' => $request->input('bankid'),
+            'account' => $request->input('account')
+        ]
+    ];
+
+    return new Request($mappings[$type]);
+}
+
+/**
+ * Creates the appropriate form request instance for the verification type
+ * 
+ * @param string $type The verification type
+ * @param Request $request The request with mapped parameters
+ * @param User $user The authenticated user
+ * @return FormRequest The appropriate form request instance
+ */
+private function createFormRequest($type, Request $request, $user)
+{
+    $requestClasses = [
+        'national_id' => IdRequest::class,
+        'alien_id' => IdRequest::class,
+        'dl' => IdRequest::class,
+        'krapin' => KrapinRequest::class,
+        'business' => BusinessRequest::class,
+        'plate' => VehiclePlateRequest::class,
+        'collateral' => CollateralRequest::class,
+        'phone' => AccountValidationRequest::class,
+        'bank' => BankAccountRequest::class
+    ];
+
+    $class = $requestClasses[$type];
+    $formRequest = new $class($request->all());
+    
+    // Set the user on the request
+    $formRequest->setUserResolver(function () use ($user) {
+        return $user;
+    });
+
+    return $formRequest;
+}
+
+
+/**
+ * Handle error responses from the verification process
+ * 
+ * @param mixed $transaction The transaction result containing error details
+ * @return \Illuminate\Http\JsonResponse
+ */
+private function error_handle($transaction) 
+{
+    if (isset($transaction['error'])) {
+        return response()->json([
+            'success' => false,
+            'response_code' => $transaction['error']['response_code'],
+            'message' => $transaction['error']['message'],
+            'data' => []
+        ]);
+    }
+    
+    return response()->json([
+        'success' => false,
+        'response_code' => 424,
+        'message' => 'Failed to process request',
+        'data' => []
+    ]);
+}
+
+
     /**
      * Collateral
      *

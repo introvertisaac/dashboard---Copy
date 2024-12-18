@@ -34,5 +34,6 @@ Route::middleware('auth:sanctum')->prefix('v1')->middleware(ApiAuthMiddleware::c
     Route::post('phone', [ApiController::class, 'validateAccount'])->name('Phone Number');  
     Route::post('bank', [ApiController::class, 'bank'])->name('Bank Account');
     Route::get('balance', [ApiController::class, 'balance'])->name('Balance');
+    Route::post('verify', [ApiController::class, 'unifiedVerification'])->name('Unified Verification');
 
 });
